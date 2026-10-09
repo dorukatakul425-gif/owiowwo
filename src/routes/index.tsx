@@ -136,12 +136,12 @@ function Index() {
   }, [currentTrack?.id, scrollRef]);
   const playTrack = (track: YouTubeTrack) => {
     setCurrentTrack(track);
-    setMessages((list) => [...list, { kind: "music", name: "Sen", avatar: avatarDefault, text: track.title }]);
+    setMessages((list) => [...list, { kind: "music", name: "Sen", avatar: avatarDefaultAsset, text: track.title }]);
     setRecentTracks((tracks) => [track, ...tracks.filter((item) => item.id !== track.id)].slice(0, 30));
   };
   const submit = () => {
     if (!message.trim()) return;
-    setMessages((previous) => [...previous, { kind: "text", name: "Sen", color: "blue", avatar: avatarDefault, text: message.trim() }]);
+    setMessages((previous) => [...previous, { kind: "text", name: "Sen", color: "blue", avatar: avatarDefaultAsset, text: message.trim() }]);
     setMessage("");
   };
   const icon = (name: string, image: string, className: string, badge?: boolean) => (
@@ -159,7 +159,7 @@ function Index() {
         if (event.target instanceof Element && !event.target.closest("button")) inputRef.current?.blur();
       }}>
       <section className="wood-table" aria-label="Table 1004">
-        <img className="wood-surface" src={wood} alt="" draggable={false} />
+        <img className="wood-surface" src={woodAsset} alt="" draggable={false} />
         <div className="table-content">
         <header className="table-toolbar">
           {icon("Hearts", heart, "heart-control")}
@@ -204,7 +204,7 @@ function Index() {
         <input ref={inputRef} aria-label="Message" placeholder="Mesaj yaz" value={message} onChange={(event) => setMessage(event.target.value)} enterKeyHint="send" onKeyDown={(event) => { if (event.key === "Escape") inputRef.current?.blur(); }} />
         {icon("Puzzle", puzzle, "puzzle-control")}
         {icon("Gift", gift, "gift-control")}
-        <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={send} alt="" /></Button>
+        <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={sendAsset} alt="" /></Button>
       </form>
       <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); setSpinning(false); closeBottles(); }} />
       <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} />
