@@ -162,14 +162,14 @@ function Index() {
         <img className="wood-surface" src={woodAsset} alt="" draggable={false} />
         <div className="table-content">
         <header className="table-toolbar">
-          {icon("Hearts", heart, "heart-control")}
+          {icon("Hearts", heartAsset, "heart-control")}
           <span className="heart-value">14</span>
-          {icon("Trophy", trophy, "trophy-control", true)}
+          {icon("Trophy", trophyAsset, "trophy-control", true)}
            <GameMenu onRatings={() => { inputRef.current?.blur(); setRatingsOpen(true); }} onBoosters={() => { inputRef.current?.blur(); setBoostersOpen(true); }} onAchievements={() => setAchievementsOpen(true)} onAppearance={() => { inputRef.current?.blur(); setAppearanceOpen(true); }} onBottle={() => { inputRef.current?.blur(); setGiftRecipient(null); setBottleChooserOpen(true); }} />
-          {icon("Settings", settings, "settings-control")}
-          {icon("Leave table", exit, "exit-control")}
+          {icon("Settings", settingsAsset, "settings-control")}
+          {icon("Leave table", exitAsset, "exit-control")}
           <span className="table-number">Table<br />1004</span>
-          {icon("Players", count, "count-control")}
+          {icon("Players", countAsset, "count-control")}
         </header>
         <div className="table-players" role="group" aria-label="12 players">
           {tablePlayers.map((player, index) => (
@@ -197,13 +197,13 @@ function Index() {
             )}
           </div>
         ))}<div ref={chatEndRef} /></div>
-        {currentTrack ? <ChatMusicPlayer track={currentTrack} onStop={() => setCurrentTrack(null)} /> : <>{icon("Video", video, "video-control")}{icon("Music", music, "music-control")}</>}
+        {currentTrack ? <ChatMusicPlayer track={currentTrack} onStop={() => setCurrentTrack(null)} /> : <>{icon("Video", videoAsset, "video-control")}{icon("Music", musicAsset, "music-control")}</>}
       </section>
       </div>
       <form className="message-bar" onSubmit={(event) => { event.preventDefault(); submit(); }}>
         <input ref={inputRef} aria-label="Message" placeholder="Mesaj yaz" value={message} onChange={(event) => setMessage(event.target.value)} enterKeyHint="send" onKeyDown={(event) => { if (event.key === "Escape") inputRef.current?.blur(); }} />
-        {icon("Puzzle", puzzle, "puzzle-control")}
-        {icon("Gift", gift, "gift-control")}
+        {icon("Puzzle", puzzleAsset, "puzzle-control")}
+        {icon("Gift", giftAsset, "gift-control")}
         <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={sendAsset} alt="" /></Button>
       </form>
       <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); setSpinning(false); closeBottles(); }} />
