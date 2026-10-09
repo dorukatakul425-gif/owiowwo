@@ -21,6 +21,7 @@ import { VideoMusicPopup } from "@/components/video-music-popup";
 import { ChatMusicPlayer } from "@/components/chat-music-player";
 import { GiftDrawer, type GiftRecipient } from "@/components/gift-drawer";
 import { PlayerProfile } from "@/components/player-profile";
+import { GameRoundStage } from "@/components/game-round-stage";
 import type { YouTubeTrack } from "@/lib/youtube.types";
 const woodAsset = "/game-assets/current/wood.png";
 const heartAsset = "/game-assets/current/heart.png";
@@ -91,7 +92,7 @@ function Index() {
   const finishOpening = useCallback(() => setOpening(false), []);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(seedMessages);
-  const [spinning, setSpinning] = useState(false);
+  const [kissHearts, setKissHearts] = useState(0);
   const [bottleChooserOpen, setBottleChooserOpen] = useState(false);
   const [chosenBottle, setChosenBottle] = useState<BottleChoice | null>(null);
   const closeBottles = useCallback(() => {
@@ -163,7 +164,7 @@ function Index() {
         <div className="table-content">
         <header className="table-toolbar">
           {icon("Hearts", heartAsset, "heart-control")}
-          <span className="heart-value">14</span>
+          <span className="heart-value">{14 + kissHearts}</span>
           {icon("Trophy", trophyAsset, "trophy-control", true)}
            <GameMenu onRatings={() => { inputRef.current?.blur(); setRatingsOpen(true); }} onBoosters={() => { inputRef.current?.blur(); setBoostersOpen(true); }} onAchievements={() => setAchievementsOpen(true)} onAppearance={() => { inputRef.current?.blur(); setAppearanceOpen(true); }} onBottle={() => { inputRef.current?.blur(); setGiftRecipient(null); setBottleChooserOpen(true); }} />
           {icon("Settings", settingsAsset, "settings-control")}
@@ -171,19 +172,9 @@ function Index() {
           <span className="table-number">Table<br />1004</span>
           {icon("Players", countAsset, "count-control")}
         </header>
-        <div className="table-players" role="group" aria-label="12 players">
-          {tablePlayers.map((player, index) => (
-            <Button variant="reference" size="reference" className={`player player-seat-${index + 1}`} key={player.name} aria-label={`${player.name} hediyelerini aç`} onClick={() => setGiftRecipient(player)}>
-              <img src={player.image} alt={player.name} draggable={false} />
-              {index === 0 && appliedAppearance && <span className="player-appearance" aria-hidden="true" style={{ borderImageSource: `url("${appliedAppearance.frame.url.replace("appearance-frame-", "table-frame-")}")` }} />}
-              {index === 0 && appliedAppearance ? <span className="player-styled-name"><span className="player-name-icon"><img src={appliedAppearance.icon.url} alt="" draggable={false} /></span><span>{player.name}</span><span className="player-name-icon"><img src={appliedAppearance.icon.url} alt="" draggable={false} /></span></span> : <span>{player.name}</span>}
-            </Button>
-          ))}
-        </div>
-        <Button variant="reference" size="reference" className={`bottle-control${spinning ? " is-spinning" : ""}`} aria-label="Spin bottle"
-          onClick={() => setSpinning(true)} onAnimationEnd={() => setSpinning(false)}>
-          <img className={chosenBottle ? "chosen-bottle-art" : undefined} src={chosenBottle?.image ?? bottleAsset} alt="Waiting for the next turn" draggable={false} />
-        </Button>
+        <GameRoundStage players={tablePlayers} appearance={appliedAppearance} bottle={chosenBottle}
+          paused={opening || heartShopOpen || leagueOpen || settingsOpen || friendsOpen || contactOpen || boostersOpen || ratingsOpen || videoMusicOpen || profileOpen || appearanceOpen || achievementsOpen || bottleChooserOpen || Boolean(giftRecipient)}
+          onPlayer={setGiftRecipient} onKisses={(count) => setKissHearts((previous) => previous + count)} />
         </div>
       </section>
       <section className={`chat-area${currentTrack ? ' has-music' : ''}`} aria-label="Chat">
@@ -206,7 +197,7 @@ function Index() {
         {icon("Gift", giftAsset, "gift-control")}
         <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={sendAsset} alt="" /></Button>
       </form>
-      <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); setSpinning(false); closeBottles(); }} />
+      <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); closeBottles(); }} />
       <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} />
       <PlayerProfile open={profileOpen} recipient={giftRecipient} onOpenChange={setProfileOpen} onGifts={() => { if (!giftRecipient) setGiftRecipient(tablePlayers[0] ?? null); }} />
       <HeartShop open={heartShopOpen} onOpenChange={setHeartShopOpen} />

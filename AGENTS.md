@@ -15,3 +15,5 @@
 - Implement contact as a controlled Radix dialog with shared heart-shop motion and a native mailto link, because composing in the user's mail app needs no email service or server integration.
 - Keep booster inventory, help and selected-item details in nested controlled Radix dialogs with independent dismissal and shared heart-shop motion, because closing a top popup must preserve the underlying inventory.
 - Keep ratings in a controlled Radix dialog with nested independent help and a Radix period menu, with browser-safe demonstration data separated from presentation, because this is a reference UI request rather than a live ranking service.
+- Keep bot gameplay in a browser-safe round reducer, timed hook and focused table stage with session-only state; pause timers behind dialogs so reference animations do not introduce live account or multiplayer behavior.
+- Compute turn arrows from the same reference-table seat coordinates used by player motion and bottle targeting, so every seat points correctly without rotating the prompt text.

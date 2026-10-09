@@ -13,20 +13,18 @@ import boxAsset from "@/assets/box-art.png.asset.json";
 const box = boxAsset.url;
 import heartsAsset from "@/assets/hearts-art.png.asset.json";
 const hearts = heartsAsset.url;
-import rabbitAsset from "@/assets/rabbit-art.png.asset.json";
-const rabbit = rabbitAsset.url;
+import rabbit from "@/assets/rabbit-dat.png";
 import patternAsset from "@/assets/heart-pattern.png.asset.json";
 const pattern = patternAsset.url;
 import heartAsset from "@/assets/offer-heart.png.asset.json";
 const heart = heartAsset.url;
-import coinAsset from "@/assets/offer-coin.png.asset.json";
-const coin = coinAsset.url;
+import coin from "@/assets/dat-coin.png";
 
 const offers = [
-  { amount: "VIP", bonus: "STATUS", art: vip, price: "Details", vip: true },
-  { amount: "12500", bonus: "25% BONUS", art: chest, price: "10000", badge: "Best offer" },
+  { amount: "VIP", bonus: "STATUS", art: vip, price: "Detaylar", vip: true },
+  { amount: "12500", bonus: "25% BONUS", art: chest, price: "10000", badge: "Ən sərfəli təklif" },
   { amount: "6000", bonus: "20% BONUS", art: pot, price: "5000" },
-  { amount: "2200", bonus: "10% BONUS", art: sack, price: "2000", badge: "Best pick" },
+  { amount: "2200", bonus: "10% BONUS", art: sack, price: "2000", badge: "Ən yaxşı seçim" },
   { amount: "500", art: box, price: "500" },
   { amount: "10", art: hearts, price: "10" },
   { amount: "20", art: rabbit, price: "Göndər", coin: true, gift: true },
@@ -51,15 +49,15 @@ export function HeartShop({ open, onOpenChange }: { open: boolean; onOpenChange:
                   {offer.badge && <span className={`offer-badge${index === 3 ? " pick-badge" : ""}`}>{offer.badge}</span>}
                   <div className="offer-heading">
                     <div className="offer-amount">
-                      {!offer.vip && <img src={offer.coin ? coin : heart} alt={offer.coin ? "GM" : "Hearts"} />}
+                      {!offer.vip && <img src={offer.coin ? coin : heart} alt={offer.coin ? "DAT" : "Hearts"} />}
                       <span>{offer.amount}</span>
                     </div>
                     {offer.bonus && <div className="offer-bonus">{offer.bonus}</div>}
                   </div>
                   <img className="offer-art" src={offer.art} alt="" draggable={false} />
-                  <Button variant="reference" size="reference" className={`offer-price${offer.vip ? " vip-price" : ""}`} aria-label={offer.vip ? "VIP Details" : `${offer.amount} ${offer.coin ? "GM" : "hearts"}, ${offer.price}${offer.gift ? "" : " GM"}`}>
+                  <Button variant="reference" size="reference" className={`offer-price${offer.vip ? " vip-price" : ""}`} aria-label={offer.vip ? "VIP Detaylar" : `${offer.amount} ${offer.coin ? "DAT" : "hearts"}, ${offer.price}${offer.gift ? "" : " DAT"}`}>
                     {offer.price}
-                    {!offer.vip && !offer.gift && <img src={coin} alt="GM" />}
+                    {!offer.vip && !offer.gift && <img src={coin} alt="DAT" width={512} height={512} loading="lazy" />}
                   </Button>
                 </article>
               ))}

@@ -1,17 +1,24 @@
-# Yenilənmə qeydləri — scc-bottle-updated-v6
+# Yenilənmə qeydləri — scc-bottle-updated-v7
 
-## Yeni əlavələr
-1. **Dostlarım pəncərəsi** — Ayarlardan açılır, Radix Dialoq, eyni açılma animasiyası ("Bərək"/"Yalnız mən" seçimi, session daxilində).
-2. **Bizimlə əlaqə pəncərəsi** — "E-poçt göndər" düyməsi poçt tətbiqini dorukatakul425@gmail.com ünvanına mesajla açır.
-3. **Gücləndiricilər pəncərəsi** — 3 xəttd menyudan açılır; seçim və liqa gücləndiriciləri, sağ üst "0" sayğacı.
-4. **Gücləndiricilər nədir?** — "?" düyməsi ilə açılan izahat pəncərəsi (içəriyi sürüşdürüləbilər).
-5. **Beş gücləndirici detay pəncərəsi** — hər ikon üçün ayrı: təsvir, liqa statistikası (487/500/20 nümunə dəyərlər) və "Aktivləşdir" düyməsi (sıfır ehtiyatda deaktiv).
-6. **Reytinqlər pəncərəsi** — 5 kategoriya (Ən çox öpülənlər və s.), 50 oyunçuya qədər siyahı, 9 ilkin sətir, aşağıda sabit sarı öz sıranız (1038. user_68554530).
-7. **Reytinq dövrü menyusu** — Bütün dövrlər / Bu ay / Bu həftə / Bu gün.
-8. **Reytinq kateqoriya ikonları** — seçilmiş ikon rəngli, seçilməmişlər mavi (son yeniləmə).
+## Bu sürümdə əlavə edilənlər
+
+### Botlarla oyun (tur motoru)
+- **Tur reduceri** (`src/lib/game-round.ts`): `ready → spinning → arriving → choosing → result → returning` mərhələləri, `roundSeats`, `targetAngle`, `pickBotTarget`, `turnIndicatorGeometry` və `roundReducer`.
+- **Avtomatik zamanlama** (`src/hooks/use-game-round.ts`): şişə 5000 ms dönür, oyuncu yerinə 700 ms keçir, seçim üçün 1000 ms (bot 1800 ms), nəticə 2000 ms, geri qayıtma 600 ms.
+- **Bot növbəsi**: hər 4-cü tur bot 0, sonra bot 2 → bot 1 → bot 0 dövrü ilə.
+- **Profil hərəkəti**: şişə hansı koltuğa düşərsə, həmin oyuncunun profili eyni istiqamətə irəli gedib yerinə qayıdır (`round-spinner-rock`, `--rock-direction`).
+- **Növbə oxu**: şişənin yanındakı yaşıl ox həmişə şişəni çevirən koltuğa baxır; bucaq referans masanın koordinatlarından hesablanır (`turnIndicatorGeometry`), yaza çevirmir.
+- **Saniyə**: "Sənin seçimin" ekranında ağ, konturlu rəqəm 9-dan başlayır və hər saniyə azalır; qərar verildikdə dərhal yoxa çıxır.
+- **Pəncərələr açılanda** bütün tur zamanlayıcıları dayanır (`paused`); pəncərə bağlananda tur davam edir.
+
+### Kalp pəncərəsi
+- **İşıq animasiyası**: "Ən sərfəli təklif" və "Ən yaxşı seçim" lövhələri üzərindən 2600 ms-dan bir keçən parlaq zolaq (`offer-badge::after` + `offer-light-sweep`).
+- **Azərbaycanca etiketlər**: "Ən sərfəli təklif", "Ən yaxşı seçim", VIP düyməsində "Detaylar".
+- **DAT simgesi**: kalp/GM simgələri yerine qızılı DAT sikkəsi (`src/assets/dat-coin.png`, `src/assets/rabbit-dat.png`) — həm qiymət düymələrində, həm "Göndər" təklifində.
 
 ## Texniki qeydlər
 - Bütün pəncərələr Radix Dialog ilə idarə olunur, "shop-drop-in" animasiyası (0.52s) ortaqdır.
 - İçəri pəncərələr (kömək, detay) bağlananda əsas pəncərə açıq qalır.
-- Bütün .asset.json pointer-ları həqiqi fayllarla əvəz olunub; layihə müstəqil işləyir.
-- Dil: Azərbaycanca. Məlumatlar nümayiş üçündür (canlı hesablama deyil).
+- Tur vəziyyəti yalnız brauzer sətrində saxlanılır: heç bir hesap, server və ya çoxoyunçuluq əlaqəsi yoxdur.
+- Dil: Azərbaycanca. Reytinq, gücləndirici və liqa rəqəmləri nümayiş üçündür (canlı hesablama deyil).
+- Testlər: `bunx vitest run` — tur oxu, bot hədəfi, saniyə və öpüş/İmtina davranışları yoxlanılır.
