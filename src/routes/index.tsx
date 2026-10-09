@@ -61,7 +61,7 @@ export const Route = createFileRoute("/")({
 
 const tablePlayers = [
   { name: "user_68554, 19", image: wolfAvatar },
-  { name: "Наталья", image: natalya },
+  { name: "Наталья", image: natalyaAsset },
   { name: "Егор", image: egor },
   { name: "👑ZLyKA👑", image: avatarWoman },
   { name: "Миша", image: misha },
