@@ -182,7 +182,7 @@ function Index() {
         </div>
         <Button variant="reference" size="reference" className={`bottle-control${spinning ? " is-spinning" : ""}`} aria-label="Spin bottle"
           onClick={() => setSpinning(true)} onAnimationEnd={() => setSpinning(false)}>
-          <img className={chosenBottle ? "chosen-bottle-art" : undefined} src={chosenBottle?.image ?? bottle} alt="Waiting for the next turn" draggable={false} />
+          <img className={chosenBottle ? "chosen-bottle-art" : undefined} src={chosenBottle?.image ?? bottleAsset} alt="Waiting for the next turn" draggable={false} />
         </Button>
         </div>
       </section>
