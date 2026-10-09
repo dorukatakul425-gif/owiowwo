@@ -3,10 +3,9 @@ import { Check, LockKeyhole, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { appearanceChoices, type AppearanceChoice } from "@/lib/appearance";
-import beer from "@/assets/appearance-profile-beer.png.asset.json";
-import wood from "@/assets/wood.png.asset.json";
-import heart from "@/assets/offer-heart.png.asset.json";
-
+const beer = "/game-assets/current/appearance-profile-beer.png";
+const wood = "/game-assets/current/wood.png";
+const heart = "/game-assets/current/offer-heart.png";
 export function AppearanceArtwork({ choice }: { choice: AppearanceChoice }) {
   return <span className="appearance-artwork"><img className="appearance-frame" src={choice.frame.url} alt="" draggable={false} /><img className="appearance-center-icon" src={choice.icon.url} alt="" draggable={false} /></span>;
 }
@@ -23,14 +22,14 @@ export function AppearancePopup({ open, onOpenChange, applied, onApply }: { open
           <header className="appearance-header">
             <Dialog.Title className="appearance-title">{selected ? selected.name : "Stil uygulaması yok"}</Dialog.Title>
             <div className="appearance-preview">
-              <div className="appearance-profile"><img className="appearance-profile-wood" src={wood.url} alt="" /><img className="appearance-profile-avatar" src={beer.url} alt="Profil resmi" />{selected && <AppearanceArtwork choice={selected} />}<span>Subhan, 26</span></div>
+              <div className="appearance-profile"><img className="appearance-profile-wood" src={wood} alt="" /><img className="appearance-profile-avatar" src={beer} alt="Profil resmi" />{selected && <AppearanceArtwork choice={selected} />}<span>Subhan, 26</span></div>
               <div className="appearance-summary"><p id="appearance-description">{selected ? "Profil resmini ve kullanıcı adını seçilen stille gösterin" : "Profil resmini ve kullanıcı adını stil uygulamadan bırakın"}</p><Button variant="reference" size="reference" className="appearance-apply" disabled={selected?.id === applied?.id} onClick={() => { onApply(selected); onOpenChange(false); }}>Uygula</Button></div>
             </div>
           </header>
           <div ref={scrollRef} className="appearance-scroll" tabIndex={0} aria-label="Görünüş seçenekleri">
             <div className="appearance-grid">
               <Button variant="reference" size="reference" className="appearance-choice appearance-none" aria-label="Stil uygulaması yok" aria-pressed={selected === null} onClick={() => setSelected(null)}><span className="appearance-empty-frame"><X /></span><span className="appearance-price"><Check className="appearance-check" /></span></Button>
-              {appearanceChoices.map((choice) => <Button variant="reference" size="reference" key={choice.id} className="appearance-choice" aria-label={`${choice.name}, ${choice.locked ? "kilitli" : "500 kalp"}`} aria-disabled={choice.locked} aria-pressed={selected?.id === choice.id} onClick={() => { if (!choice.locked) setSelected(choice); }}><AppearanceArtwork choice={choice} /><span className="appearance-price">{choice.locked ? <LockKeyhole className="appearance-lock" /> : <><img src={heart.url} alt="Kalp" /><span>{choice.price}</span></>}</span></Button>)}
+              {appearanceChoices.map((choice) => <Button variant="reference" size="reference" key={choice.id} className="appearance-choice" aria-label={`${choice.name}, ${choice.locked ? "kilitli" : "500 kalp"}`} aria-disabled={choice.locked} aria-pressed={selected?.id === choice.id} onClick={() => { if (!choice.locked) setSelected(choice); }}><AppearanceArtwork choice={choice} /><span className="appearance-price">{choice.locked ? <LockKeyhole className="appearance-lock" /> : <><img src={heart} alt="Kalp" /><span>{choice.price}</span></>}</span></Button>)}
             </div>
           </div>
         </div>

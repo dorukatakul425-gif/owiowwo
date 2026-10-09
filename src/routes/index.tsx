@@ -7,8 +7,8 @@ import { HeartShop } from "@/components/heart-shop";
 import { LeaguePopup } from "@/components/league-popup";
 import { GameMenu } from "@/components/game-menu";
 import { BottleChooser } from "@/components/bottle-chooser";
-import { AppearancePopup, AppearanceArtwork } from "@/components/appearance-popup";
-import type { AppearanceChoice } from "@/lib/appearance";
+import { AppearancePopup } from "@/components/appearance-popup";
+import { appearanceChoices, type AppearanceChoice } from "@/lib/appearance";
 import type { BottleChoice } from "@/lib/bottles";
 import { AchievementsPopup } from "@/components/achievements-popup";
 import { initialAchievementProgress, updateAchievementProgress } from "@/lib/achievements";
@@ -22,55 +22,31 @@ import { ChatMusicPlayer } from "@/components/chat-music-player";
 import { GiftDrawer, type GiftRecipient } from "@/components/gift-drawer";
 import { PlayerProfile } from "@/components/player-profile";
 import type { YouTubeTrack } from "@/lib/youtube.types";
-import woodAsset from "@/assets/wood.png.asset.json";
-const wood = woodAsset.url;
-import heartAsset from "@/assets/heart.png.asset.json";
-const heart = heartAsset.url;
-import trophyAsset from "@/assets/trophy.png.asset.json";
-const trophy = trophyAsset.url;
-import settingsAsset from "@/assets/settings.png.asset.json";
-const settings = settingsAsset.url;
-import exitAsset from "@/assets/exit.png.asset.json";
-const exit = exitAsset.url;
-import countAsset from "@/assets/count.png.asset.json";
-const count = countAsset.url;
-import avatarDefaultAsset from "@/assets/avatar-default.png.asset.json";
-const avatarDefault = avatarDefaultAsset.url;
-import avatarWomanAsset from "@/assets/avatar-woman.png.asset.json";
-const avatarWoman = avatarWomanAsset.url;
-import avatarQuietAsset from "@/assets/avatar-quiet.png.asset.json";
-const avatarQuiet = avatarQuietAsset.url;
-import natalyaAsset from "@/assets/player-natalya.webp.asset.json";
-const natalya = natalyaAsset.url;
-import egorAsset from "@/assets/player-egor.webp.asset.json";
-const egor = egorAsset.url;
-import mishaAsset from "@/assets/player-misha.webp.asset.json";
-const misha = mishaAsset.url;
-import anastasiaAsset from "@/assets/player-anastasia.webp.asset.json";
-const anastasia = anastasiaAsset.url;
-import sergeyAsset from "@/assets/player-sergey.webp.asset.json";
-const sergey = sergeyAsset.url;
-import ekaterinaAsset from "@/assets/player-ekaterina.webp.asset.json";
-const ekaterina = ekaterinaAsset.url;
-import timurAsset from "@/assets/player-timur.webp.asset.json";
-const timur = timurAsset.url;
-import lizaAsset from "@/assets/player-liza.webp.asset.json";
-const liza = lizaAsset.url;
-import lenyaAsset from "@/assets/player-lenya.webp.asset.json";
-const lenya = lenyaAsset.url;
-import bottleAsset from "@/assets/bottle.png.asset.json";
-const bottle = bottleAsset.url;
-import videoAsset from "@/assets/video.png.asset.json";
-const video = videoAsset.url;
-import musicAsset from "@/assets/music.png.asset.json";
-const music = musicAsset.url;
-import puzzleAsset from "@/assets/puzzle.png.asset.json";
-const puzzle = puzzleAsset.url;
-import giftAsset from "@/assets/gift.png.asset.json";
-const gift = giftAsset.url;
-import sendAsset from "@/assets/send.png.asset.json";
-const send = sendAsset.url;
-
+const woodAsset = "/game-assets/current/wood.png";
+const heartAsset = "/game-assets/current/heart.png";
+const trophyAsset = "/game-assets/current/trophy.png";
+const settingsAsset = "/game-assets/current/settings.png";
+const exitAsset = "/game-assets/current/exit.png";
+const countAsset = "/game-assets/current/count.png";
+const avatarDefaultAsset = "/game-assets/current/avatar-default.png";
+const wolfAvatar = "/game-assets/current/wolf-avatar.png";
+const avatarWomanAsset = "/game-assets/current/avatar-woman.png";
+const avatarQuietAsset = "/game-assets/current/avatar-quiet.png";
+const natalyaAsset = "/game-assets/current/player-natalya.webp";
+const egorAsset = "/game-assets/current/player-egor.webp";
+const mishaAsset = "/game-assets/current/player-misha.webp";
+const anastasiaAsset = "/game-assets/current/player-anastasia.webp";
+const sergeyAsset = "/game-assets/current/player-sergey.webp";
+const ekaterinaAsset = "/game-assets/current/player-ekaterina.webp";
+const timurAsset = "/game-assets/current/player-timur.webp";
+const lizaAsset = "/game-assets/current/player-liza.webp";
+const lenyaAsset = "/game-assets/current/player-lenya.webp";
+const bottleAsset = "/game-assets/current/bottle.png";
+const videoAsset = "/game-assets/current/video.png";
+const musicAsset = "/game-assets/current/music.png";
+const puzzleAsset = "/game-assets/current/puzzle.png";
+const giftAsset = "/game-assets/current/gift.png";
+const sendAsset = "/game-assets/current/send.png";
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({ meta: [
@@ -84,7 +60,7 @@ export const Route = createFileRoute("/")({
 });
 
 const tablePlayers = [
-  { name: "user_68554, 19", image: avatarDefault },
+  { name: "user_68554, 19", image: wolfAvatar },
   { name: "Наталья", image: natalya },
   { name: "Егор", image: egor },
   { name: "👑ZLyKA👑", image: avatarWoman },
@@ -125,7 +101,7 @@ function Index() {
   const [active, setActive] = useState<string | null>(null);
   const [heartShopOpen, setHeartShopOpen] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
-  const [appliedAppearance, setAppliedAppearance] = useState<AppearanceChoice | null>(null);
+  const [appliedAppearance, setAppliedAppearance] = useState<AppearanceChoice | null>(() => appearanceChoices.find((choice) => choice.id === 31) ?? null);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [achievementProgress, setAchievementProgress] = useState(initialAchievementProgress);
   useEffect(() => {
@@ -199,8 +175,8 @@ function Index() {
           {tablePlayers.map((player, index) => (
             <Button variant="reference" size="reference" className={`player player-seat-${index + 1}`} key={player.name} aria-label={`${player.name} hediyelerini aç`} onClick={() => setGiftRecipient(player)}>
               <img src={player.image} alt={player.name} draggable={false} />
-              {index === 0 && appliedAppearance && <span className="player-appearance"><AppearanceArtwork choice={appliedAppearance} /></span>}
-              <span>{player.name}</span>
+              {index === 0 && appliedAppearance && <span className="player-appearance" aria-hidden="true" style={{ borderImageSource: `url("${appliedAppearance.frame.url.replace("appearance-frame-", "table-frame-")}")` }} />}
+              {index === 0 && appliedAppearance ? <span className="player-styled-name"><span className="player-name-icon"><img src={appliedAppearance.icon.url} alt="" draggable={false} /></span><span>{player.name}</span><span className="player-name-icon"><img src={appliedAppearance.icon.url} alt="" draggable={false} /></span></span> : <span>{player.name}</span>}
             </Button>
           ))}
         </div>

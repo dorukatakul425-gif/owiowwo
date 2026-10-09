@@ -214,8 +214,8 @@ body { position: fixed; inset: 0; width: 100%; }
 .exit-control { left: 67.84%; }
 .count-control { left: 90.1%; }
 .table-number { position: absolute; left: 82.9%; top: 2.8%; font-size: 2.35cqw; line-height: 1.13; font-weight: 700; text-align: center; }
-.player { position: absolute; width: 17.19%; text-align: center; font-size: 2.08cqw; line-height: 1.3; text-shadow: 0 1px 2px var(--table-shadow); }
-.player img { display: block; width: 100%; aspect-ratio: 1; border-radius: 8%; }
+.player { position: absolute; width: 17.19%; isolation: isolate; overflow: visible; text-align: center; font-size: 2.08cqw; line-height: 1.3; text-shadow: 0 1px 2px var(--table-shadow); }
+.player > img { display: block; width: 100%; aspect-ratio: 1; border-radius: 8%; position: relative; z-index: 1; }
 .player span { display: block; margin-top: 0.26cqw; white-space: nowrap; }
 .player-seat-1 { left: 8.72%; top: 19.23%; }
 .player-seat-2 { left: 30.56%; top: 14.75%; }
@@ -726,8 +726,12 @@ body { position: fixed; inset: 0; width: 100%; }
 .appearance-price .appearance-check { width: 4.8cqw; height: 4.8cqw; border-radius: 50%; padding: 0.6cqw; background: var(--appearance-green); color: var(--appearance-surface); stroke-width: 3; }
 .appearance-close.reference-button { position: absolute; top: -3.55cqw; right: -3.55cqw; width: 11.2cqw; height: 11.2cqw; border-radius: 50%; background: var(--appearance-surface); color: var(--appearance-green); box-shadow: 0 1.4cqw 2cqw var(--shop-shadow); }
 .appearance-close.reference-button svg { width: 7.5cqw; height: 7.5cqw; }
-.player-appearance { position: absolute; inset: -5% -5% auto; width: 110%; aspect-ratio: 1; margin: 0; pointer-events: none; }
-.player-appearance .appearance-artwork { width: 100%; height: 100%; margin: 0; }
+.player:has(.player-appearance) > img { border-radius: 4%; }
+.player-appearance { position: absolute; top: 0; left: 50%; width: 116%; aspect-ratio: 1; box-sizing: border-box; border: 2.25cqw solid transparent; border-image-slice: 22%; border-image-repeat: stretch; transform: translate(-50%, -6.8965517%); margin: 0 !important; pointer-events: none; z-index: 2; }
+.player .player-styled-name { display: flex; align-items: center; justify-content: center; gap: 0.55cqw; margin-top: 1.25cqw; position: relative; z-index: 3; }
+.player .player-name-icon { display: block; position: relative; width: 1.9cqw; height: 1.9cqw; overflow: hidden; flex: none; margin: 0; }
+.player .player-name-icon img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 212%; height: 212%; max-width: none; aspect-ratio: 1; object-fit: contain; border-radius: 0; }
+.player .player-styled-name span { display: inline; margin: 0; }
 @media (max-height: 480px) { .appearance-popup { top: 52%; height: 88dvh; width: min(73.3vw, 350px); } }
 
 /* Friends: measured reference layout, shared heart-shop motion. */
