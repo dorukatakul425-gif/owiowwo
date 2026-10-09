@@ -1,4 +1,5 @@
 # Tasks
+- [x] Push gameplay, shop and DAT updates to the GitHub repo through the connected connector.
 - [x] Add video-style shimmer to Azerbaijani offer badges and replace shop GM icons with DAT.
 - [x] Verify heart popup labels, animated highlights and DAT icons.
 - [x] Match revised video spinner motion, seat-aware arrows, transition timings and central countdown.

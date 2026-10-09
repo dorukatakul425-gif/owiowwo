@@ -17,3 +17,4 @@
 - Keep ratings in a controlled Radix dialog with nested independent help and a Radix period menu, with browser-safe demonstration data separated from presentation, because this is a reference UI request rather than a live ranking service.
 - Keep bot gameplay in a browser-safe round reducer, timed hook and focused table stage with session-only state; pause timers behind dialogs so reference animations do not introduce live account or multiplayer behavior.
 - Compute turn arrows from the same reference-table seat coordinates used by player motion and bottle targeting, so every seat points correctly without rotating the prompt text.
+- Deliver finished changes to the user's GitHub repository through the connected GitHub connector's Git Data API (blobs, tree, commit, then a refs update) instead of local git commands, because the sandbox holds no git credentials and the connector token is the only authorized path.
