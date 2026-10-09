@@ -62,16 +62,16 @@ export const Route = createFileRoute("/")({
 const tablePlayers = [
   { name: "user_68554, 19", image: wolfAvatar },
   { name: "Наталья", image: natalyaAsset },
-  { name: "Егор", image: egor },
-  { name: "👑ZLyKA👑", image: avatarWoman },
-  { name: "Миша", image: misha },
-  { name: "Анастасия", image: anastasia },
-  { name: "Сергей", image: sergey },
-  { name: "Екатерина", image: ekaterina },
-  { name: "Тимур", image: timur },
-  { name: "Лиза", image: liza },
-  { name: "Лёня", image: lenya },
-  { name: "☞Quiet ☜", image: avatarQuiet },
+  { name: "Егор", image: egorAsset },
+  { name: "👑ZLyKA👑", image: avatarWomanAsset },
+  { name: "Миша", image: mishaAsset },
+  { name: "Анастасия", image: anastasiaAsset },
+  { name: "Сергей", image: sergeyAsset },
+  { name: "Екатерина", image: ekaterinaAsset },
+  { name: "Тимур", image: timurAsset },
+  { name: "Лиза", image: lizaAsset },
+  { name: "Лёня", image: lenyaAsset },
+  { name: "☞Quiet ☜", image: avatarQuietAsset },
 ];
 
 type ChatMessage = { kind: "text" | "music"; name: string; color?: "blue" | "pink" | "sky"; avatar: string; text: string; translate?: boolean };
