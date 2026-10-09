@@ -76,12 +76,12 @@ const tablePlayers = [
 
 type ChatMessage = { kind: "text" | "music"; name: string; color?: "blue" | "pink" | "sky"; avatar: string; text: string; translate?: boolean };
 const seedMessages: ChatMessage[] = [
-  { kind: "text", name: "Amelia", color: "pink", avatar: avatarWoman, text: "Miraç, eminmisin onun olduğuna" },
-  { kind: "text", name: "ФУАД", color: "sky", avatar: anastasia, text: "Gülü, .", translate: true },
-  { kind: "text", name: "Miraç", color: "blue", avatar: egor, text: "Amelia, yaww bu mal eskiden de hep bunu bize yaprdı" },
-  { kind: "text", name: "Miraç", color: "blue", avatar: egor, text: "bunun kanını bilirim kanını" },
-  { kind: "text", name: "Amelia", color: "pink", avatar: avatarWoman, text: "Miraç, ben tanımam" },
-  { kind: "text", name: "Miraç", color: "blue", avatar: egor, text: "Amelia, arkdasım diyon ???" },
+  { kind: "text", name: "Amelia", color: "pink", avatar: avatarWomanAsset, text: "Miraç, eminmisin onun olduğuna" },
+  { kind: "text", name: "ФУАД", color: "sky", avatar: anastasiaAsset, text: "Gülü, .", translate: true },
+  { kind: "text", name: "Miraç", color: "blue", avatar: egorAsset, text: "Amelia, yaww bu mal eskiden de hep bunu bize yaprdı" },
+  { kind: "text", name: "Miraç", color: "blue", avatar: egorAsset, text: "bunun kanını bilirim kanını" },
+  { kind: "text", name: "Amelia", color: "pink", avatar: avatarWomanAsset, text: "Miraç, ben tanımam" },
+  { kind: "text", name: "Miraç", color: "blue", avatar: egorAsset, text: "Amelia, arkdasım diyon ???" },
 ];
 
 function Index() {
