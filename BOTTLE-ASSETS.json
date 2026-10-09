@@ -1,0 +1,47 @@
+[
+  {
+    "file": "public/game-assets/bottle-baby.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 18943
+  },
+  {
+    "file": "public/game-assets/bottle-brown.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 17475
+  },
+  {
+    "file": "public/game-assets/bottle-champagne.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 20328
+  },
+  {
+    "file": "public/game-assets/bottle-clear.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 17526
+  },
+  {
+    "file": "public/game-assets/bottle-cola.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 18115
+  },
+  {
+    "file": "public/game-assets/bottle-green.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 18018
+  },
+  {
+    "file": "public/game-assets/bottle-orange.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 19726
+  },
+  {
+    "file": "public/game-assets/bottle-sprite.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 20087
+  },
+  {
+    "file": "public/game-assets/bottle-whiskey.png",
+    "source": "Extracted individual bottle icon from user reference",
+    "bytes": 21052
+  }
+]

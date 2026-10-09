@@ -1,0 +1,13 @@
+{
+  "version": 6,
+  "project": "scc-bottle-updated",
+  "note": "Bütün .asset.json pointer-ları həqiqi fayllarla əvəz olunub. Bütün media src/assets və public/game-assets qovluqlarındadır.",
+  "new_features": [
+    "friends-popup",
+    "contact-popup",
+    "boosters-popup + help + 5 detail",
+    "ratings-popup + help + period menu"
+  ],
+  "assets_root": "src/assets",
+  "media_root": "public/game-assets"
+}
