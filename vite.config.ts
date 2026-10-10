@@ -11,7 +11,7 @@ const localAssets = {
     if (!source.endsWith(".asset.json") || !importer) return null;
     const base = source.startsWith("@/")
       ? path.resolve(__dirname, "src", source.slice(2))
-      : path.resolve(path.dirname(importer.split("?")[0]), source);
+      : path.resolve(path.dirname(importer.split("?")[0] ?? importer), source);
     const binary = base.slice(0, -".asset.json".length);
     return fs.existsSync(binary) ? PREFIX + base + ".mjs" : null;
   },

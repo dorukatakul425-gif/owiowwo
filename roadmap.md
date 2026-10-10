@@ -1,19 +1,9 @@
 # Tasks
-- [x] Push VIP, Kick and Save, tea gift and heart shop changes to the GitHub repo through the connected connector.
-- [x] Match the tea gift's empty-to-full flight and recipient anchoring to the supplied video.
-- [x] Verify tea flight, catalogue appearance and arrival on the live table.
-- [x] Add reference-matched Azerbaijani Kick and Save and nested help from the profile shoe action.
-- [x] Verify independent dismissal, help and VIP details flow.
-- [x] Add reference-matched Azerbaijani VIP details popup with six animated benefit slides and nested dismissal.
-- [x] Verify VIP popup from the shop on desktop and mobile.
-- [x] Add Azerbaijani daily bonus popup matching video: every entry for testing, claim sound, flying hearts and balance bump.
-- [x] Push gameplay, shop and DAT updates to the GitHub repo through the connected connector.
-- [x] Add video-style shimmer to Azerbaijani offer badges and replace shop GM icons with DAT.
-- [x] Verify heart popup labels, animated highlights and DAT icons.
-- [x] Match revised video spinner motion, seat-aware arrows, transition timings and central countdown.
-- [x] Translate changed gameplay text into Azerbaijani and verify bot flows.
-- [x] Match video round choreography, English choices, green indicators and bottle visibility.
-- [x] Enable playable bot rounds and verify spin, kiss, refusal and return-to-seat flows.
-- [x] Add appearance popup and separate frame/icon artwork.
-- [x] Verify menu, motion, scrolling, apply, locks and close in desktop/mobile preview.
-- [x] Package portable updated source.
+- [x] Measure tea departure, travel, landing and both sounds from the supplied video.
+- [x] Apply reference motion and extracted audio to the existing tea gift.
+- [x] Verify gift sending and landing in the preview and run focused tests.
+- [x] Measure crown movement, landing, stars and sound timing from the new recording's frames and audio; direct continuous viewing unavailable.
+- [x] Add crown delivery with recorded audio and reference-relative geometry.
+- [x] Test crown sending and arrival in the preview.
+- [x] Recheck progressive crown tilt and final seated angle against the recording's frames; direct viewing unavailable.
+- [x] Update rotation regression tests and verify sending through landing.

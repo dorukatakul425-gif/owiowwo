@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import fullGlass from "@/assets/tea-glass-full.png.asset.json";
 import emptyGlass from "@/assets/tea-glass-empty.png.asset.json";
+import { teaMotion, TEA_FLIGHT_MS } from "@/lib/tea-motion";
+import { playTeaSound } from "@/lib/tea-audio";
 
 export type TeaDelivery = { id: number; recipient: string; sender: string };
-export const TEA_FLIGHT_MS = 3100;
+export { TEA_FLIGHT_MS } from "@/lib/tea-motion";
 
 /** Read live avatar rectangles each frame so resize and moving seats stay aligned. */
 export function TeaGiftFlight({ delivery, onComplete }: { delivery: TeaDelivery; onComplete: () => void }) {
@@ -14,29 +16,29 @@ export function TeaGiftFlight({ delivery, onComplete }: { delivery: TeaDelivery;
   useEffect(() => {
     let frame = 0;
     let started: number | undefined;
+    let arrivalPlayed = false;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const findSeat = (name: string) => Array.from(document.querySelectorAll<HTMLElement>(".round-player")).find(seat => seat.dataset["playerName"] === name);
     const draw = (now: number) => {
       if (started === undefined) started = now;
       const elapsed = now - started;
-      const progress = reduced ? 1 : Math.min(1, elapsed / TEA_FLIGHT_MS);
-      const source = findSeat(delivery.sender)?.getBoundingClientRect();
-      const target = findSeat(delivery.recipient)?.getBoundingClientRect();
+      const source = findSeat(delivery.sender)?.querySelector("img")?.getBoundingClientRect();
+      const target = findSeat(delivery.recipient)?.querySelector("img")?.getBoundingClientRect();
       const table = document.querySelector(".table-content")?.getBoundingClientRect();
       if (!source || !target || !table || !glass.current || !fill.current) { complete.current(); return; }
-      const size = table.width * 0.105;
-      const startX = source.left + source.width / 2;
-      const startY = source.top + source.width * 0.12;
-      const endX = target.right - target.width * 0.08;
-      const endY = target.bottom - target.width * 0.08;
-      glass.current.style.width = `${size}px`;
-      glass.current.style.transform = `translate3d(${startX + (endX - startX) * progress - size / 2}px, ${startY + (endY - startY) * progress - size / 2}px, 0)`;
+      const motion = teaMotion(reduced ? TEA_FLIGHT_MS : elapsed, source, target, table.width);
+      glass.current.style.width = `${motion.size}px`;
+      glass.current.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0)`;
       // The saucer, spoon and garnish never dissolve: only the liquid rises.
-      const surface = 88 - progress * 61;
-      fill.current.style.clipPath = progress === 1 ? "none" : `polygon(30% ${surface}%, 78% ${surface}%, 78% 89%, 30% 89%)`;
-      glass.current.dataset["fill"] = progress.toFixed(3);
-      glass.current.dataset["phase"] = progress < 1 ? "flying" : "arrived";
-      if (elapsed >= (reduced ? 900 : TEA_FLIGHT_MS + 1800)) { complete.current(); return; }
+      const surface = 88 - motion.fill * 61;
+      fill.current.style.clipPath = motion.fill === 1 ? "none" : `polygon(30% ${surface}%, 78% ${surface}%, 78% 89%, 30% 89%)`;
+      glass.current.dataset["fill"] = motion.fill.toFixed(3);
+      glass.current.dataset["phase"] = motion.arrived ? "arrived" : "flying";
+      if (motion.arrived && !arrivalPlayed) {
+        arrivalPlayed = true;
+        void playTeaSound("arrive");
+      }
+      // Keep the gift attached to the live avatar until replaced by another gift.
       frame = requestAnimationFrame(draw);
     };
     frame = requestAnimationFrame(draw);
