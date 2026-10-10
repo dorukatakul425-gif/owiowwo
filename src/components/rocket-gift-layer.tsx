@@ -3,8 +3,8 @@ import { RocketGiftFlight, type RocketDelivery } from "@/components/rocket-gift-
 import { prepareGiftAudio, playGiftSound } from "@/lib/gift-audio";
 
 export function sendRocketGift(recipient: string) {
-  const sender = document.querySelector<HTMLElement>(".round-player-self")?.dataset.playerName
-    ?? document.querySelector<HTMLElement>(".round-player")?.dataset.playerName;
+  const sender = document.querySelector<HTMLElement>(".round-player-self")?.dataset["playerName"]
+    ?? document.querySelector<HTMLElement>(".round-player")?.dataset["playerName"];
   if (!sender) return;
   prepareGiftAudio("rocket");
   void playGiftSound("rocket", "send");
