@@ -1,8 +1,12 @@
 # Tasks
-- [x] Measure rotating flight, particle trail, docking and audio against the newer recording.
-- [x] Correct the gift presentation and verify sending through arrival in the preview.
-- [x] Transfer the verified changes to the requested GitHub repository.
-- [x] Measure the reference rocket flight, arrival effect and recorded sounds.
-- [x] Integrate the matching gift into the repository's existing game and this preview.
-- [x] Verify gift sending and attachment through the preview and tests.
-- [x] Send the focused changes to the requested GitHub repository.
+- [x] Thin ruby borders without resizing its 229.97px outer dimensions; replace feather movement with intermittent downward light inside stationary wings. Browser confirms one light animation, phase pixel changes, five passing tests and no runtime errors; exact recording equivalence remains unverified.
+- [x] Identify Yakut (32) in the recording; the user corrected the effect to downward illumination, not feather movement.
+- [x] Sharpen Yakut; use stationary shared nine-slice artwork and a soft masked light sweep. Artwork and timing remain reference-based rather than pixel-exact copies.
+- [x] Prepare all 14 reference designs as individual sharper transparent images; screenshot-based enhancement may alter small label details and is not pixel-exact extraction.
+- [x] Use the same improved bottle images in the chooser and on the table; all 14 selections verified in the browser with no runtime errors.
+- [x] Compare both supplied recordings for rocket trail and profile arrival.
+- [x] Implement reference-inspired falling stars, arrival flash, and settling gold specks; exact visual equivalence is not established.
+- [x] Verify delivery phases and rendering in the live game, including continuing gold specks after closing the drawer.
+- [x] Replace tiny ring-like arrival with visible yellow stars that linger on the recipient's profile; verified visually in the game and retained after 15 seconds with the drawer closed.
+- [x] Recreate IMG_3821's mixed-size yellow star constellation and upper-left placement; retained mark visually verified in-game, without claiming pixel-exact equivalence.- [x] Avatar kiss counter: red lip print with white total, matching IMG_3828.
+- [x] Sharpen the wooden table background.

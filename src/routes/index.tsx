@@ -30,7 +30,7 @@ import { CrownGiftFlight, type CrownDelivery } from "@/components/crown-gift-fli
 import { TomatoGiftFlight, type TomatoDelivery } from "@/components/tomato-gift-flight";
 import { prepareGiftAudio, playGiftSound } from "@/lib/gift-audio";
 import type { YouTubeTrack } from "@/lib/youtube.types";
-const woodAsset = "/game-assets/current/wood.png";
+const woodAsset = "/game-assets/current/wood-sharp.jpg";
 const heartAsset = "/game-assets/current/heart.png";
 const trophyAsset = "/game-assets/current/trophy.png";
 const settingsAsset = "/game-assets/current/settings.png";

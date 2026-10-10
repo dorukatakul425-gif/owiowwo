@@ -3,11 +3,12 @@ import { Check, LockKeyhole, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { appearanceChoices, type AppearanceChoice } from "@/lib/appearance";
+import { RubyFrame } from "@/components/ruby-frame";
 const beer = "/game-assets/current/appearance-profile-beer.png";
 const wood = "/game-assets/current/wood.png";
 const heart = "/game-assets/current/offer-heart.png";
 export function AppearanceArtwork({ choice }: { choice: AppearanceChoice }) {
-  return <span className="appearance-artwork"><img className="appearance-frame" src={choice.frame.url} alt="" draggable={false} /><img className="appearance-center-icon" src={choice.icon.url} alt="" draggable={false} /></span>;
+  return <span className="appearance-artwork">{choice.id === 32 ? <RubyFrame className="appearance-frame" /> : <img className="appearance-frame" src={choice.frame.url} alt="" draggable={false} />}<img className="appearance-center-icon" src={choice.icon.url} alt="" draggable={false} /></span>;
 }
 
 export function AppearancePopup({ open, onOpenChange, applied, onApply }: { open: boolean; onOpenChange: (open: boolean) => void; applied: AppearanceChoice | null; onApply: (choice: AppearanceChoice | null) => void }) {

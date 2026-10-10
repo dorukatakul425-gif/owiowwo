@@ -19,7 +19,7 @@ export function BottleChooser({ open, onClose, onSelect }: { open: boolean; onCl
       <h2 id="bottle-chooser-title" className="bottle-chooser-title">Şişeyi değiştir</h2>
       <div className="bottle-chooser-grid">
         {bottles.map((choice) => <Button key={choice.id} variant="reference" size="reference" className="bottle-choice" aria-label={`${choice.name}, ${choice.price} kalp`} onClick={() => onSelect(choice)}>
-          <span className="bottle-choice-art"><img src={choice.image} alt="" draggable={false} /></span>
+          <span className="bottle-choice-art"><img src={choice.image} alt="" draggable={false} decoding="async" /></span>
           <span className="bottle-choice-price"><img src={heart.url} alt="Kalp" draggable={false} />{choice.price}</span>
         </Button>)}
       </div>

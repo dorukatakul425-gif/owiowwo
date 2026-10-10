@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useGameRound } from "@/hooks/use-game-round";
 import { roundSeats, turnIndicatorGeometry } from "@/lib/game-round";
 import type { AppearanceChoice } from "@/lib/appearance";
-import type { BottleChoice } from "@/lib/bottles";
-import colaAsset from "@/assets/round-cola.png.asset.json";
+import { bottles, type BottleChoice } from "@/lib/bottles";
+import { RubyFrame } from "@/components/ruby-frame";
+
+const defaultBottle = bottles.find((choice) => choice.id === "cola");
 
 type Player = { name: string; image: string };
 type Props = { players: Player[]; appearance: AppearanceChoice | null; bottle: BottleChoice | null; paused: boolean; onPlayer: (player: Player) => void; onKisses: (count: number) => void };
@@ -49,7 +51,9 @@ export function GameRoundStage({ players, appearance, bottle, paused, onPlayer, 
         const position: GameStyle = { "--seat-x": `${centered && participant ? left ? 28.5 : 53.1 : seat.x}%`, "--seat-y": `${centered && participant ? 46 : seat.y}%`, "--rock-direction": turn.rock };
         return <Button key={player.name} data-player-name={player.name} variant="reference" size="reference" className={`player round-player${participant ? " round-participant" : ""}${index === state.actor ? " round-actor" : ""}${centered && participant ? " round-centered" : ""}${centered && participant && left ? " round-left" : ""}`} style={position} aria-label={`${player.name} hədiyyələrini aç`} onClick={() => onPlayer(player)} disabled={centered && participant}>
           <img src={player.image} alt={player.name} draggable={false} />
-          {index === 0 && appearance && <span className="player-appearance" aria-hidden="true" style={{ borderImageSource: `url("${appearance.frame.url.replace("appearance-frame-", "table-frame-")}")` }} />}
+          {index === 0 && appearance && (appearance.id === 32
+            ? <span className="player-appearance player-appearance-ruby" aria-hidden="true"><RubyFrame /></span>
+            : <span className="player-appearance" aria-hidden="true" style={{ borderImageSource: `url("${appearance.frame.url.replace("appearance-frame-", "table-frame-")}")` }} />)}
           {(state.kisses[index] ?? 0) > 0 && <span className="round-kiss-count" aria-label={`${state.kisses[index]} öpüş`}>{state.kisses[index]}</span>}
           <span className="round-player-name">{player.name}</span>
           {index > 0 && <span className="round-bot-label">BOT</span>}
@@ -57,7 +61,7 @@ export function GameRoundStage({ players, appearance, bottle, paused, onPlayer, 
       })}
     </div>
     <Button variant="reference" size="reference" className={`bottle-control round-bottle${hiddenBottle ? " round-bottle-hidden" : ""}`} style={{ "--bottle-angle": `${state.rotation}deg` } as GameStyle} aria-label="Şüşəni çevir" disabled={paused || state.phase !== "ready" || state.actor !== 0} onClick={spin}>
-      <img className="round-bottle-art" src={bottle?.image ?? colaAsset.url} alt="Şüşə" draggable={false} />
+      <img className="round-bottle-art" src={bottle?.image ?? defaultBottle?.image} alt="Şüşə" draggable={false} decoding="async" />
     </Button>
     {state.phase === "ready" && state.actor === 0 && <Button variant="reference" size="reference" className="round-spin-prompt" onClick={spin} disabled={paused} aria-label="Şüşəni çevirməyə başla">
       <svg viewBox="0 0 140 60" aria-hidden="true"><path d="M132 49 Q73 -7 9 27 M9 27 L24 7 M9 27 L32 38" /></svg>

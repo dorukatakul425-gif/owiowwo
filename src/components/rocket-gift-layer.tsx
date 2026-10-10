@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { RocketGiftFlight, type RocketDelivery } from "@/components/rocket-gift-flight";
+import { RocketGiftFlight, RocketProfileStars, type RocketDelivery } from "@/components/rocket-gift-flight";
 import { prepareGiftAudio, playGiftSound } from "@/lib/gift-audio";
 
 export function sendRocketGift(recipient: string) {
@@ -13,6 +13,7 @@ export function sendRocketGift(recipient: string) {
 
 export function RocketGiftLayer() {
   const [deliveries, setDeliveries] = useState<RocketDelivery[]>([]);
+  const [profileGifts, setProfileGifts] = useState<string[]>([]);
   const sequence = useRef(0);
   useEffect(() => {
     const send = (event: Event) => {
@@ -22,11 +23,16 @@ export function RocketGiftLayer() {
         || typeof detail.sender !== "string" || typeof detail.recipient !== "string") return;
       const { sender, recipient } = detail;
       const delivery = { id: ++sequence.current, sender, recipient };
+      setProfileGifts(previous => previous.filter(name => name !== recipient));
       setDeliveries(previous => [...previous.filter(item => item.recipient !== recipient), delivery]);
     };
     window.addEventListener("gift:rocket", send);
     return () => window.removeEventListener("gift:rocket", send);
   }, []);
-  return <>{deliveries.map(delivery => <RocketGiftFlight key={delivery.id} delivery={delivery}
-    onComplete={() => setDeliveries(previous => previous.filter(item => item.id !== delivery.id))} />)}</>;
+  return <>{profileGifts.map(recipient => <RocketProfileStars key={recipient} recipient={recipient} />)}
+    {deliveries.map(delivery => <RocketGiftFlight key={delivery.id} delivery={delivery}
+    onComplete={() => {
+      setDeliveries(previous => previous.filter(item => item.id !== delivery.id));
+      setProfileGifts(previous => previous.includes(delivery.recipient) ? previous : [...previous, delivery.recipient]);
+    }} />)}</>;
 }

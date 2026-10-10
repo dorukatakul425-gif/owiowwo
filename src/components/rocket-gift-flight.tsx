@@ -1,9 +1,57 @@
 import { useEffect, useRef } from "react";
 import rocketAsset from "@/assets/rocket-flight.png.asset.json";
-import { rocketMotion, ROCKET_FLIGHT_MS, ROCKET_BURST_MS, ROCKET_IMPACT_MS } from "@/lib/rocket-motion";
+import { rocketMotion, rocketTrailParticles, rocketProfileStars, rocketArrivalPhase, ROCKET_FLIGHT_MS, ROCKET_BURST_MS, ROCKET_IMPACT_MS, ROCKET_ARRIVAL_RADIUS } from "@/lib/rocket-motion";
 import { playGiftSound } from "@/lib/gift-audio";
 
 export type RocketDelivery = { id: number; sender: string; recipient: string };
+
+function drawProfileStars(ctx: CanvasRenderingContext2D, target: Parameters<typeof rocketProfileStars>[0], gold: string, highlight: string, alpha = 1) {
+  ctx.globalAlpha = alpha;
+  for (const [id, particle] of rocketProfileStars(target).entries()) {
+    ctx.fillStyle = id % 9 === 0 ? highlight : gold;
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = particle.rotation + i * Math.PI / 5;
+      const radius = particle.radius * (i % 2 ? 0.46 : 1);
+      const x = particle.x + Math.cos(angle) * radius;
+      const y = particle.y + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/** Static gift mark: redraw only when the recipient's layout changes. */
+export function RocketProfileStars({ recipient }: { recipient: string }) {
+  const particles = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const image = Array.from(document.querySelectorAll<HTMLElement>(".round-player"))
+      .find(item => item.dataset["playerName"] === recipient)?.querySelector("img");
+    const canvas = particles.current;
+    if (!image || !canvas) return;
+    const redraw = () => {
+      const target = image.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const size = Math.max(target.width, target.height) * 0.65;
+      canvas.width = Math.round(size * dpr); canvas.height = Math.round(size * dpr);
+      canvas.style.width = `${size}px`; canvas.style.height = `${size}px`;
+      canvas.style.transform = `translate3d(${target.left + target.width * 0.28 - size / 2}px, ${target.top + target.height * 0.14 - size / 2}px, 0)`;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const styles = getComputedStyle(document.documentElement);
+      drawProfileStars(ctx, { width: target.width, height: target.height, left: size / 2 - target.width * 0.28, top: size / 2 - target.height * 0.14 },
+        styles.getPropertyValue("--rocket-profile-yellow").trim(), styles.getPropertyValue("--rocket-highlight").trim());
+    };
+    redraw();
+    const observer = new ResizeObserver(redraw);
+    observer.observe(image); observer.observe(document.body);
+    window.addEventListener("resize", redraw); window.addEventListener("scroll", redraw, true);
+    return () => { observer.disconnect(); window.removeEventListener("resize", redraw); window.removeEventListener("scroll", redraw, true); };
+  }, [recipient]);
+  return <canvas ref={particles} className="rocket-gift-particles" data-impact-phase="profile" data-recipient={recipient} aria-hidden="true" />;
+}
 
 export function RocketGiftFlight({ delivery, onComplete }: { delivery: RocketDelivery; onComplete: () => void }) {
   const art = useRef<HTMLImageElement>(null);
@@ -18,13 +66,18 @@ export function RocketGiftFlight({ delivery, onComplete }: { delivery: RocketDel
     const styles = getComputedStyle(document.documentElement);
     const trail = ["--rocket-lime", "--rocket-yellow", "--rocket-mint", "--rocket-pink"].map(token => styles.getPropertyValue(token).trim());
     const gold = styles.getPropertyValue("--rocket-gold").trim();
+    const highlight = styles.getPropertyValue("--rocket-highlight").trim();
+    const transparent = styles.getPropertyValue("--rocket-transparent").trim();
     const seat = (name: string) => Array.from(document.querySelectorAll<HTMLElement>(".round-player")).find(item => item.dataset["playerName"] === name)?.querySelector("img")?.getBoundingClientRect();
     const star = (ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, color: string, rotation: number) => {
-      ctx.fillStyle = color;
+      if (radius < 0.25) return;
+      const fill = ctx.createLinearGradient(x - radius, y - radius, x + radius, y + radius);
+      fill.addColorStop(0, highlight); fill.addColorStop(0.25, color); fill.addColorStop(1, color);
+      ctx.fillStyle = fill;
       ctx.beginPath();
       for (let i = 0; i < 10; i++) {
         const angle = rotation + i * Math.PI / 5;
-        const r = i % 2 ? radius * 0.42 : radius;
+        const r = i % 2 ? radius * 0.46 : radius;
         const px = x + Math.cos(angle) * r;
         const py = y + Math.sin(angle) * r;
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
@@ -47,42 +100,55 @@ export function RocketGiftFlight({ delivery, onComplete }: { delivery: RocketDel
       node.style.opacity = motion.arrived ? `${Math.max(0, 1 - motion.burstAge / ROCKET_IMPACT_MS)}` : "1";
       canvas.dataset["phase"] = motion.arrived ? "arrived" : "flying";
       if (motion.arrived && !arrived) { arrived = true; void playGiftSound("rocket", "arrive"); }
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = window.innerWidth; const height = window.innerHeight;
       if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) { canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); }
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
         if (!reduced) {
-          // The recording leaves a narrow, downward-falling trail, not a halo.
-          if (!motion.arrived || motion.burstAge < 800) {
-            for (let i = 0; i < 44; i++) {
-              const age = ((elapsed / 1250 + i * 0.618) % 1) * 1250;
-              const emitted = elapsed - age;
-              if (emitted < 80 || emitted > ROCKET_FLIGHT_MS) continue;
-              const previous = rocketMotion(emitted, source, target);
-              const phase = age / 1250;
-              const x = previous.x + Math.sin(i * 4.7 + age * 0.003) * target.width * 0.07;
-              const y = previous.y + target.width * (0.14 + phase * 0.9);
-              ctx.globalAlpha = (1 - phase) * Math.min(1, (ROCKET_FLIGHT_MS + 800 - elapsed) / 400);
-              star(ctx, x, y, target.width * (0.006 + (1 - phase) * 0.055), trail[i % trail.length] ?? gold, i + age * 0.002);
-            }
+          // Trail continues falling after docking; it never switches to an arrival halo.
+          const falling = rocketTrailParticles(elapsed, source, target);
+          canvas.dataset["trailCount"] = String(falling.length);
+          for (const particle of falling) {
+            ctx.globalAlpha = particle.alpha;
+            star(ctx, particle.x, particle.y, particle.radius, trail[particle.color] ?? gold, particle.rotation);
           }
           if (motion.arrived) {
-            for (let i = 0; i < 55; i++) {
-              const phase = (i * 0.618) % 1;
-              const angle = i * 2.399;
-              const flash = motion.burstAge < ROCKET_IMPACT_MS;
-              const radius = target.width * (flash ? 0.04 + phase * 0.19 : 0.03 + phase * 0.15);
-              const x = motion.x + Math.cos(angle) * radius;
-              const y = motion.y + Math.sin(angle) * radius + (flash ? 0 : motion.burstAge * target.width * 0.000018);
-              ctx.globalAlpha = flash ? 1 - motion.burstAge / ROCKET_IMPACT_MS : Math.min(0.8, (ROCKET_BURST_MS - motion.burstAge) / 600);
-              if (flash) star(ctx, x, y, target.width * (0.014 + phase * 0.036), trail[i % trail.length] ?? gold, angle);
-              else {
-                ctx.fillStyle = i % 3 === 0 ? gold : trail[1] ?? gold;
-                ctx.beginPath(); ctx.arc(x, y, target.width * (0.003 + phase * 0.005), 0, Math.PI * 2); ctx.fill();
+            const flash = motion.burstAge < ROCKET_IMPACT_MS;
+            canvas.dataset["impactPhase"] = rocketArrivalPhase(motion.burstAge);
+            if (flash) {
+              const progress = motion.burstAge / ROCKET_IMPACT_MS;
+              const glow = ctx.createRadialGradient(motion.x, motion.y, 0, motion.x, motion.y, target.width * 0.3);
+              glow.addColorStop(0, trail[1] ?? gold); glow.addColorStop(1, transparent);
+              ctx.globalAlpha = 0.3 * Math.sin(Math.PI * progress);
+              ctx.fillStyle = glow; ctx.fillRect(motion.x - target.width * 0.3, motion.y - target.width * 0.3, target.width * 0.6, target.width * 0.6);
+              // A few large overlapping five-point stars, not a ring of tiny confetti.
+              for (let i = 0; i < 14; i++) {
+                const seed = (i * 0.618) % 1;
+                const angle = i * 2.399;
+                const distance = target.width * (0.025 + seed * 0.16) * (0.7 + progress * 0.4);
+                ctx.globalAlpha = Math.min(1, (1 - progress) * 3);
+                star(ctx, motion.x + Math.cos(angle) * distance, motion.y + Math.sin(angle) * distance,
+                  target.width * ROCKET_ARRIVAL_RADIUS * (0.6 + seed * 0.4) * (1 - progress * 0.45),
+                  i % 5 < 3 ? trail[1] ?? gold : trail[i % trail.length] ?? gold, -Math.PI / 2 + angle * 0.12);
+              }
+            } else {
+              const progress = (motion.burstAge - ROCKET_IMPACT_MS) / (ROCKET_BURST_MS - ROCKET_IMPACT_MS);
+              drawProfileStars(ctx, target, styles.getPropertyValue("--rocket-profile-yellow").trim(), highlight);
+              for (let i = 0; i < 24; i++) {
+                const seed = (i * 0.618) % 1;
+                const angle = i * 2.399;
+                const distance = target.width * Math.sqrt(seed) * 0.18;
+                const x = motion.x + Math.cos(angle) * distance;
+                const y = motion.y + Math.sin(angle) * distance + target.width * progress * 0.09;
+                ctx.globalAlpha = (1 - progress) * 0.55;
+                ctx.fillStyle = i % 4 === 0 ? highlight : gold;
+                ctx.beginPath(); ctx.arc(x, y, target.width * (0.005 + seed * 0.012) * (1 - progress * 0.7), 0, Math.PI * 2); ctx.fill();
               }
             }
+          } else {
+            canvas.dataset["impactPhase"] = "none";
           }
           ctx.globalAlpha = 1;
         }
