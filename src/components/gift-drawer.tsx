@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { LockKeyhole, Plus, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { referenceGifts } from "@/lib/reference-gifts";
+import { RocketGiftLayer, sendRocketGift } from "@/components/rocket-gift-layer";
+import rocketReference from "@/assets/rocket-reference.png.asset.json";
+import "@/components/rocket-gift.css";
 import heartAsset from "@/assets/profile-heart.png.asset.json";
 
 // Four visible rows; artwork and prices stay inside their own cells.
@@ -9,15 +12,16 @@ const giftLayoutStyles = `
 .gift-drawer .gift-drawer-scroll { container-type: size; overflow-x: hidden; touch-action: pan-y; }
 .gift-drawer .gift-reference-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: calc((100cqh - 6.4cqw - 3 * min(4.7cqw, 4cqh)) / 4); padding: 2.4cqw 1.6cqw 4cqw; column-gap: 1.4cqw; row-gap: min(4.7cqw, 4cqh); }
 .gift-drawer .gift-reference-item.reference-button { height: 100%; min-height: 0; min-width: 0; padding: 0; gap: 0.6cqw; align-items: center; justify-content: flex-start; }
-.gift-drawer .gift-reference-art { display: block; flex: none; width: 15.4cqw; max-width: 100%; height: max(0px, min(15.4cqw, calc(100% - 5.4cqw))); object-fit: contain; }
-.gift-drawer .gift-reference-price { flex: none; height: 4.8cqw; line-height: 1; }
+.gift-drawer .gift-reference-art { display: block; flex: 1 1 0; min-height: 0; width: 15.4cqw; max-width: 100%; height: auto; object-fit: contain; }
+.gift-drawer .gift-reference-price { flex: none; height: min(4.8cqw, 4cqh); font-size: min(3.5cqw, 3.5cqh); line-height: 1; }
+.gift-drawer .gift-reference-price img { width: min(4.6cqw, 4cqh); height: min(4.3cqw, 4cqh); }
 .gift-drawer .gift-reference-item.gift-selected { transform: none; outline-offset: -2px; }
 `;
 
 export type GiftRecipient = { name: string; image: string };
 
-export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onCrown, onTomato }: {
-  recipient: GiftRecipient | null; onClose: () => void; onProfile: () => void; onHearts: () => void; onTea: (recipient: GiftRecipient) => void; onCrown: (recipient: GiftRecipient) => void; onTomato: (recipient: GiftRecipient) => void;
+function GiftDrawerContent({ recipient, onClose, onProfile, onHearts, onTea, onCrown, onTomato, onRocket }: {
+  recipient: GiftRecipient | null; onClose: () => void; onProfile: () => void; onHearts: () => void; onTea: (recipient: GiftRecipient) => void; onCrown: (recipient: GiftRecipient) => void; onTomato: (recipient: GiftRecipient) => void; onRocket: (recipient: GiftRecipient) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   useEffect(() => {
@@ -38,9 +42,9 @@ export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onC
     <section className="gift-drawer" aria-label={`${recipient.name} için hediyeler`}>
       <div className="gift-drawer-scroll" key={recipient.name}>
         <div className="gift-reference-grid">
-          {referenceGifts.map((gift, index) => <Button variant="reference" size="reference" className={`gift-reference-item${selected === gift.id ? " gift-selected" : ""}`} key={gift.id}
-            aria-label={gift.id === "gift-008" ? "Domates hediyesi gönder" : gift.id === "gift-039" ? "Çay hədiyyəsi göndər" : gift.id === "gift-001" ? "Tac hədiyyəsi göndər" : gift.locked ? `Kilitli hediye ${index + 1}` : `Hediye ${index + 1}`} aria-disabled={gift.locked} aria-pressed={selected === gift.id}
-            onClick={() => { if (!gift.locked) { setSelected(gift.id); if (gift.id === "gift-008") onTomato(recipient); if (gift.id === "gift-039") onTea(recipient); if (gift.id === "gift-001") onCrown(recipient); } }}>
+          {[{ id: "gift-rocket", image: rocketReference.url, locked: false, price: 1 }, ...referenceGifts].map((gift, index) => <Button variant="reference" size="reference" className={`gift-reference-item${selected === gift.id ? " gift-selected" : ""}`} key={gift.id}
+            aria-label={gift.id === "gift-rocket" ? "Havai fişek hediyesi gönder" : gift.id === "gift-008" ? "Domates hediyesi gönder" : gift.id === "gift-039" ? "Çay hədiyyəsi göndər" : gift.id === "gift-001" ? "Tac hədiyyəsi göndər" : gift.locked ? `Kilitli hediye ${index + 1}` : `Hediye ${index + 1}`} aria-disabled={gift.locked} aria-pressed={selected === gift.id}
+            onClick={() => { if (!gift.locked) { setSelected(gift.id); if (gift.id === "gift-rocket") onRocket(recipient); if (gift.id === "gift-008") onTomato(recipient); if (gift.id === "gift-039") onTea(recipient); if (gift.id === "gift-001") onCrown(recipient); } }}>
             <img className="gift-reference-art" src={gift.image} alt="" draggable={false} loading={index > 19 ? "lazy" : "eager"} />
             <span className="gift-reference-price">{gift.locked ? <LockKeyhole aria-hidden="true" /> : <><img src={heartAsset.url} alt="kalp" />{gift.price}</>}</span>
           </Button>)}
@@ -49,4 +53,8 @@ export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onC
       <Button variant="reference" size="reference" className="gift-drawer-close" onClick={onClose} aria-label="Hediyeleri kapat"><X /></Button>
     </section>
   </>;
+}
+
+export function GiftDrawer(props: Omit<Parameters<typeof GiftDrawerContent>[0], "onRocket">) {
+  return <><RocketGiftLayer /><GiftDrawerContent {...props} onRocket={recipient => sendRocketGift(recipient.name)} /></>;
 }

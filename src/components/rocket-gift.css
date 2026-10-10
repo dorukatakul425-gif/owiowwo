@@ -1,0 +1,5 @@
+:root { --gift-selection: oklch(0.88 0 0); --rocket-lime: oklch(0.9 0.28 125); --rocket-yellow: oklch(0.96 0.2 100); --rocket-mint: oklch(0.91 0.18 160); --rocket-pink: oklch(0.72 0.3 330); --rocket-purple: oklch(0.58 0.3 300); }
+.gift-drawer .gift-reference-item.gift-selected { transform: none; outline: none; background: var(--gift-selection); }
+.rocket-gift-flight { position: fixed; left: 0; top: 0; z-index: 72; height: auto; pointer-events: none; will-change: transform; }
+.rocket-gift-flight[data-phase="arrived"] { visibility: hidden; }
+.rocket-gift-particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 73; pointer-events: none; }
