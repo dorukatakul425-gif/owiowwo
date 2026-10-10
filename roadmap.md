@@ -1,4 +1,5 @@
 # Tasks
+- [x] Push VIP, Kick and Save, tea gift and heart shop changes to the GitHub repo through the connected connector.
 - [x] Match the tea gift's empty-to-full flight and recipient anchoring to the supplied video.
 - [x] Verify tea flight, catalogue appearance and arrival on the live table.
 - [x] Add reference-matched Azerbaijani Kick and Save and nested help from the profile shoe action.
