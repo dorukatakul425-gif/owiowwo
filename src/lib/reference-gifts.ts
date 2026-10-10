@@ -38,7 +38,7 @@ import gift035 from "@/assets/gift-035.png.asset.json";
 import gift036 from "@/assets/gift-036.png.asset.json";
 import gift037 from "@/assets/gift-037.png.asset.json";
 import gift038 from "@/assets/gift-038.png.asset.json";
-import gift039 from "@/assets/gift-039.png.asset.json";
+import gift039 from "@/assets/tea-glass-full.png.asset.json";
 import gift040 from "@/assets/gift-040.png.asset.json";
 import gift041 from "@/assets/gift-041.png.asset.json";
 import gift042 from "@/assets/gift-042.png.asset.json";

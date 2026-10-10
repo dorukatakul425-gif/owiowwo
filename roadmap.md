@@ -1,4 +1,10 @@
 # Tasks
+- [x] Match the tea gift's empty-to-full flight and recipient anchoring to the supplied video.
+- [x] Verify tea flight, catalogue appearance and arrival on the live table.
+- [x] Add reference-matched Azerbaijani Kick and Save and nested help from the profile shoe action.
+- [x] Verify independent dismissal, help and VIP details flow.
+- [x] Add reference-matched Azerbaijani VIP details popup with six animated benefit slides and nested dismissal.
+- [x] Verify VIP popup from the shop on desktop and mobile.
 - [x] Add Azerbaijani daily bonus popup matching video: every entry for testing, claim sound, flying hearts and balance bump.
 - [x] Push gameplay, shop and DAT updates to the GitHub repo through the connected connector.
 - [x] Add video-style shimmer to Azerbaijani offer badges and replace shop GM icons with DAT.

@@ -47,7 +47,7 @@ export function GameRoundStage({ players, appearance, bottle, paused, onPlayer, 
         const participant = index === state.actor || index === state.target;
         const left = involved ? index === 0 : index === state.actor;
         const position: GameStyle = { "--seat-x": `${centered && participant ? left ? 28.5 : 53.1 : seat.x}%`, "--seat-y": `${centered && participant ? 46 : seat.y}%`, "--rock-direction": turn.rock };
-        return <Button key={player.name} variant="reference" size="reference" className={`player round-player${participant ? " round-participant" : ""}${index === state.actor ? " round-actor" : ""}${centered && participant ? " round-centered" : ""}${centered && participant && left ? " round-left" : ""}`} style={position} aria-label={`${player.name} hədiyyələrini aç`} onClick={() => onPlayer(player)} disabled={centered && participant}>
+        return <Button key={player.name} data-player-name={player.name} variant="reference" size="reference" className={`player round-player${participant ? " round-participant" : ""}${index === state.actor ? " round-actor" : ""}${centered && participant ? " round-centered" : ""}${centered && participant && left ? " round-left" : ""}`} style={position} aria-label={`${player.name} hədiyyələrini aç`} onClick={() => onPlayer(player)} disabled={centered && participant}>
           <img src={player.image} alt={player.name} draggable={false} />
           {index === 0 && appearance && <span className="player-appearance" aria-hidden="true" style={{ borderImageSource: `url("${appearance.frame.url.replace("appearance-frame-", "table-frame-")}")` }} />}
           {(state.kisses[index] ?? 0) > 0 && <span className="round-kiss-count" aria-label={`${state.kisses[index]} öpüş`}>{state.kisses[index]}</span>}

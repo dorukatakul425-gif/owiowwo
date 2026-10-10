@@ -24,6 +24,7 @@ import { GiftDrawer, type GiftRecipient } from "@/components/gift-drawer";
 import { PlayerProfile } from "@/components/player-profile";
 import { DailyBonus } from "@/components/daily-bonus";
 import { GameRoundStage } from "@/components/game-round-stage";
+import { TeaGiftFlight, type TeaDelivery } from "@/components/tea-gift-flight";
 import type { YouTubeTrack } from "@/lib/youtube.types";
 const woodAsset = "/game-assets/current/wood.png";
 const heartAsset = "/game-assets/current/heart.png";
@@ -143,6 +144,14 @@ function Index() {
   const [currentTrack, setCurrentTrack] = useState<YouTubeTrack | null>(null);
   const [recentTracks, setRecentTracks] = useState<YouTubeTrack[]>([]);
   const [giftRecipient, setGiftRecipient] = useState<GiftRecipient | null>(null);
+  const [teaDeliveries, setTeaDeliveries] = useState<TeaDelivery[]>([]);
+  const teaSequence = useRef(0);
+  const sendTea = (recipient: GiftRecipient) => {
+    const sender = tablePlayers[0];
+    if (!sender) return;
+    teaSequence.current += 1;
+    setTeaDeliveries(previous => [...previous.slice(-7), { id: teaSequence.current, recipient: recipient.name, sender: sender.name }]);
+  };
   const [profileOpen, setProfileOpen] = useState(false);
   const closeGifts = useCallback(() => setGiftRecipient(null), []);
   useEffect(() => { const el = chatEndRef.current?.parentElement; if (el) el.scrollTop = el.scrollHeight; }, [messages.length]);
@@ -214,7 +223,8 @@ function Index() {
         <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={sendAsset} alt="" /></Button>
       </form>
       <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); closeBottles(); }} />
-      <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} />
+      <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} onTea={sendTea} />
+      {teaDeliveries.map(delivery => <TeaGiftFlight key={delivery.id} delivery={delivery} onComplete={() => setTeaDeliveries(previous => previous.filter(item => item.id !== delivery.id))} />)}
       <PlayerProfile open={profileOpen} recipient={giftRecipient} onOpenChange={setProfileOpen} onGifts={() => { if (!giftRecipient) setGiftRecipient(tablePlayers[0] ?? null); }} />
       <DailyBonus open={dailyOpen} onClaim={claimBonus} />
       {flight && <img key={flight.id} className="bonus-flying-heart" src={heartAsset} alt="" aria-hidden="true"
