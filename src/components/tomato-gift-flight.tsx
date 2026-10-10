@@ -14,25 +14,40 @@ export function TomatoGiftFlight({ delivery, onComplete }: { delivery: TomatoDel
     let frame = 0;
     let started: number | undefined;
     let arrived = false;
+    let settled = false;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const seat = (name: string) => Array.from(document.querySelectorAll<HTMLElement>(".round-player")).find(item => item.dataset["playerName"] === name)?.querySelector("img")?.getBoundingClientRect();
-    const draw = (now: number) => {
-      started ??= now;
+    const paint = (elapsed: number) => {
       const source = seat(delivery.sender);
       const target = seat(delivery.recipient);
       const node = art.current;
-      if (!source || !target || !node) { complete.current(); return; }
-      const elapsed = reduced ? TOMATO_FLIGHT_MS + 180 : now - started;
+      if (!source || !target || !node) { complete.current(); return false; }
       const motion = tomatoMotion(elapsed, source, target);
       node.style.width = `${motion.size}px`;
       node.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0) rotate(${motion.arrived ? 0 : motion.rotation}deg) scale(${motion.arrived ? motion.splatScale : 1})`;
       node.dataset["phase"] = motion.arrived ? "arrived" : "flying";
       if (motion.arrived && !arrived) { arrived = true; void playGiftSound("tomato", "arrive"); }
-      // Recompute the attachment every frame as seats move into and out of the kiss round.
+      return motion.arrived && motion.splatScale === 1;
+    };
+    const draw = (now: number) => {
+      started ??= now;
+      // After the splat settles, stop the per-frame loop; the splat only moves
+      // again on layout changes, so hundreds of delivered tomatoes cost nothing.
+      if (paint(reduced ? TOMATO_FLIGHT_MS + 180 : now - started)) {
+        settled = true;
+        window.addEventListener("resize", repaint);
+        window.addEventListener("scroll", repaint, true);
+        return;
+      }
       frame = requestAnimationFrame(draw);
     };
+    const repaint = () => { if (settled) paint(TOMATO_FLIGHT_MS + 180); };
     frame = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", repaint);
+      window.removeEventListener("scroll", repaint, true);
+    };
   }, [delivery]);
   return <div ref={art} className="tomato-gift-flight" data-phase="flying" role="img" aria-label={`${delivery.recipient} için domates hediyesi`}>
     <img className="tomato-whole" src={tomatoAsset} alt="" draggable={false} />

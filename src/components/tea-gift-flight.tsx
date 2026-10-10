@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import fullGlass from "@/assets/tea-glass-full.png.asset.json";
 import emptyGlass from "@/assets/tea-glass-empty.png.asset.json";
-import { teaMotion, TEA_FLIGHT_MS } from "@/lib/tea-motion";
+import { teaMotion, TEA_FLIGHT_MS, TEA_FILL_MS } from "@/lib/tea-motion";
 import { playTeaSound } from "@/lib/tea-audio";
 
 export type TeaDelivery = { id: number; recipient: string; sender: string };
@@ -17,15 +17,14 @@ export function TeaGiftFlight({ delivery, onComplete }: { delivery: TeaDelivery;
     let frame = 0;
     let started: number | undefined;
     let arrivalPlayed = false;
+    let settled = false;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const findSeat = (name: string) => Array.from(document.querySelectorAll<HTMLElement>(".round-player")).find(seat => seat.dataset["playerName"] === name);
-    const draw = (now: number) => {
-      if (started === undefined) started = now;
-      const elapsed = now - started;
+    const paint = (elapsed: number) => {
       const source = findSeat(delivery.sender)?.querySelector("img")?.getBoundingClientRect();
       const target = findSeat(delivery.recipient)?.querySelector("img")?.getBoundingClientRect();
       const table = document.querySelector(".table-content")?.getBoundingClientRect();
-      if (!source || !target || !table || !glass.current || !fill.current) { complete.current(); return; }
+      if (!source || !target || !table || !glass.current || !fill.current) { complete.current(); return false; }
       const motion = teaMotion(reduced ? TEA_FLIGHT_MS : elapsed, source, target, table.width);
       glass.current.style.width = `${motion.size}px`;
       glass.current.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0)`;
@@ -38,11 +37,28 @@ export function TeaGiftFlight({ delivery, onComplete }: { delivery: TeaDelivery;
         arrivalPlayed = true;
         void playTeaSound("arrive");
       }
-      // Keep the gift attached to the live avatar until replaced by another gift.
+      return motion.arrived && motion.fill === 1;
+    };
+    const draw = (now: number) => {
+      if (started === undefined) started = now;
+      // Once the glass is docked and full, stop the per-frame loop: the gift only
+      // moves again when the layout itself changes (resize/scroll), so hundreds of
+      // delivered teas cost nothing per frame.
+      if (paint(now - started)) {
+        settled = true;
+        window.addEventListener("resize", repaint);
+        window.addEventListener("scroll", repaint, true);
+        return;
+      }
       frame = requestAnimationFrame(draw);
     };
+    const repaint = () => { if (settled) paint(TEA_FLIGHT_MS + TEA_FILL_MS); };
     frame = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", repaint);
+      window.removeEventListener("scroll", repaint, true);
+    };
   }, [delivery]);
   return <div ref={glass} className="tea-gift-flight" role="img" aria-label={`${delivery.recipient} üçün çay hədiyyəsi`}>
     <img src={emptyGlass.url} alt="" draggable={false} />

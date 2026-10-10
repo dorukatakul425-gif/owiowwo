@@ -151,6 +151,9 @@ function Index() {
   const [teaDeliveries, setTeaDeliveries] = useState<TeaDelivery[]>([]);
   const [crownDeliveries, setCrownDeliveries] = useState<CrownDelivery[]>([]);
   const [tomatoDeliveries, setTomatoDeliveries] = useState<TomatoDelivery[]>([]);
+  // Spam backstop: cap simultaneous flights per gift type so hundreds of taps
+  // can never pile up enough animation loops to stutter the game.
+  const MAX_FLIGHTS = 24;
   const crownSequence = useRef(0);
   const sendCrown = (recipient: GiftRecipient) => {
     const sender = tablePlayers[0];
@@ -158,7 +161,7 @@ function Index() {
     prepareGiftAudio("crown");
     void playGiftSound("crown", "send");
     crownSequence.current += 1;
-    setCrownDeliveries(previous => [...previous, { id: crownSequence.current, recipient: recipient.name, sender: sender.name }]);
+    setCrownDeliveries(previous => [...previous.slice(-(MAX_FLIGHTS - 1)), { id: crownSequence.current, recipient: recipient.name, sender: sender.name }]);
   };
   const tomatoSequence = useRef(0);
   const sendTomato = (recipient: GiftRecipient) => {
@@ -167,7 +170,7 @@ function Index() {
     prepareGiftAudio("tomato");
     void playGiftSound("tomato", "send");
     tomatoSequence.current += 1;
-    setTomatoDeliveries(previous => [...previous, { id: tomatoSequence.current, sender: sender.name, recipient: recipient.name }]);
+    setTomatoDeliveries(previous => [...previous.slice(-(MAX_FLIGHTS - 1)), { id: tomatoSequence.current, sender: sender.name, recipient: recipient.name }]);
   };
   const teaSequence = useRef(0);
   const sendTea = (recipient: GiftRecipient) => {
@@ -176,7 +179,7 @@ function Index() {
     prepareTeaAudio();
     void playTeaSound("send");
     teaSequence.current += 1;
-    setTeaDeliveries(previous => [...previous, { id: teaSequence.current, recipient: recipient.name, sender: sender.name }]);
+    setTeaDeliveries(previous => [...previous.slice(-(MAX_FLIGHTS - 1)), { id: teaSequence.current, recipient: recipient.name, sender: sender.name }]);
   };
   const [profileOpen, setProfileOpen] = useState(false);
   const closeGifts = useCallback(() => setGiftRecipient(null), []);
