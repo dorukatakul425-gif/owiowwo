@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { rocketMotion, ROCKET_FLIGHT_MS, ROCKET_BURST_MS } from "@/lib/rocket-motion";
+
 const source = { left: 627, top: 780, width: 203, height: 210 };
 const target = { left: 56, top: 680, width: 204, height: 210 };
 describe("Recorded rocket motion", () => {

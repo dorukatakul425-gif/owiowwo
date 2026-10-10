@@ -2,7 +2,9 @@ import { useEffect, useRef } from "react";
 import rocketAsset from "@/assets/rocket-flight.png.asset.json";
 import { rocketMotion, ROCKET_FLIGHT_MS, ROCKET_BURST_MS, ROCKET_IMPACT_MS } from "@/lib/rocket-motion";
 import { playGiftSound } from "@/lib/gift-audio";
+
 export type RocketDelivery = { id: number; sender: string; recipient: string };
+
 export function RocketGiftFlight({ delivery, onComplete }: { delivery: RocketDelivery; onComplete: () => void }) {
   const art = useRef<HTMLImageElement>(null);
   const particles = useRef<HTMLCanvasElement>(null);

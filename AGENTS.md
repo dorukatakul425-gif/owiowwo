@@ -9,8 +9,8 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Keep reference tea timing and avatar-relative geometry in `src/lib/tea-motion.ts` so playback and regression tests share one model.
-- Play recorded gift samples through a browser-only, tap-resumed Web Audio context so delayed arrival audio works on mobile without synthesized replacements.
-- Keep crown flight geometry and deterministic particle timing in `src/lib/crown-motion.ts` so playback and regression tests share one reference model.
-- Share recorded tea and crown playback in `src/lib/gift-audio.ts` through one browser-only AudioContext so mobile tap unlocking applies to both gift types.
-- Keep tomato flight timing and avatar-relative docking in `src/lib/tomato-motion.ts` so playback and regression tests share one model.
+- Preserve the imported game's TanStack bootstrap and frontend modules so the preview remains compatible with the target repository.
+- Keep rocket flight timing and avatar-relative docking in src/lib/rocket-motion.ts so the animation and regression tests share the same measurements.
+- Render the rocket's falling star trail separately from its brief arrival flash and settling gold specks so the recorded effect phases remain independently measurable.
+- Use the shared tap-resumed browser AudioContext for recorded gift audio so mobile arrival sounds remain unlocked.
+- Keep the rocket overlay mounted alongside the gift drawer so closing the drawer does not interrupt deliveries.

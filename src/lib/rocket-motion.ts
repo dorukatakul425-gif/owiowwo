@@ -3,7 +3,8 @@ export const ROCKET_BURST_MS = 2600;
 export const ROCKET_IMPACT_MS = 600;
 export const ROCKET_TURN_DEGREES = 300;
 export type RocketAvatarRect = { left: number; top: number; width: number; height: number };
-/** Recorded rotating flight eases into the recipient's right interior. */
+
+/** Reference flight: from the sender's center into the recipient's lower-right interior. */
 export function rocketMotion(elapsed: number, source: RocketAvatarRect, target: RocketAvatarRect) {
   const progress = Math.max(0, Math.min(1, elapsed / ROCKET_FLIGHT_MS));
   const travel = Math.sin(progress * Math.PI / 2);
