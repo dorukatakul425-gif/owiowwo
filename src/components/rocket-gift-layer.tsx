@@ -24,7 +24,7 @@ export function RocketGiftLayer() {
       const { sender, recipient } = detail;
       const delivery = { id: ++sequence.current, sender, recipient };
       setProfileGifts(previous => previous.filter(name => name !== recipient));
-      setDeliveries(previous => [...previous.filter(item => item.recipient !== recipient), delivery]);
+      setDeliveries(previous => [...previous, delivery]);
     };
     window.addEventListener("gift:rocket", send);
     return () => window.removeEventListener("gift:rocket", send);

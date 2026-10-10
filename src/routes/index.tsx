@@ -158,7 +158,7 @@ function Index() {
     prepareGiftAudio("crown");
     void playGiftSound("crown", "send");
     crownSequence.current += 1;
-    setCrownDeliveries(previous => [...previous.filter(item => item.recipient !== recipient.name), { id: crownSequence.current, recipient: recipient.name, sender: sender.name }]);
+    setCrownDeliveries(previous => [...previous, { id: crownSequence.current, recipient: recipient.name, sender: sender.name }]);
   };
   const tomatoSequence = useRef(0);
   const sendTomato = (recipient: GiftRecipient) => {
@@ -167,7 +167,7 @@ function Index() {
     prepareGiftAudio("tomato");
     void playGiftSound("tomato", "send");
     tomatoSequence.current += 1;
-    setTomatoDeliveries(previous => [...previous.filter(item => item.recipient !== recipient.name), { id: tomatoSequence.current, sender: sender.name, recipient: recipient.name }]);
+    setTomatoDeliveries(previous => [...previous, { id: tomatoSequence.current, sender: sender.name, recipient: recipient.name }]);
   };
   const teaSequence = useRef(0);
   const sendTea = (recipient: GiftRecipient) => {
@@ -176,7 +176,7 @@ function Index() {
     prepareTeaAudio();
     void playTeaSound("send");
     teaSequence.current += 1;
-    setTeaDeliveries(previous => [...previous.filter(item => item.recipient !== recipient.name), { id: teaSequence.current, recipient: recipient.name, sender: sender.name }]);
+    setTeaDeliveries(previous => [...previous, { id: teaSequence.current, recipient: recipient.name, sender: sender.name }]);
   };
   const [profileOpen, setProfileOpen] = useState(false);
   const closeGifts = useCallback(() => setGiftRecipient(null), []);
