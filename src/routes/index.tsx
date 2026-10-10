@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OpeningScreen } from "@/components/opening-screen";
 import { useChatViewport } from "@/hooks/use-chat-viewport";
@@ -21,6 +22,7 @@ import { VideoMusicPopup } from "@/components/video-music-popup";
 import { ChatMusicPlayer } from "@/components/chat-music-player";
 import { GiftDrawer, type GiftRecipient } from "@/components/gift-drawer";
 import { PlayerProfile } from "@/components/player-profile";
+import { DailyBonus } from "@/components/daily-bonus";
 import { GameRoundStage } from "@/components/game-round-stage";
 import type { YouTubeTrack } from "@/lib/youtube.types";
 const woodAsset = "/game-assets/current/wood.png";
@@ -89,7 +91,18 @@ function Index() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { appRef, scrollRef, inputRef } = useChatViewport();
   const [opening, setOpening] = useState(true);
-  const finishOpening = useCallback(() => setOpening(false), []);
+  const [dailyOpen, setDailyOpen] = useState(false);
+  const [bonusHearts, setBonusHearts] = useState(0);
+  const [flight, setFlight] = useState<{ id: number; x: number; y: number; dx: number; dy: number; amount: number } | null>(null);
+  const [heartBump, setHeartBump] = useState(0);
+  const finishOpening = useCallback(() => { setOpening(false); setDailyOpen(true); }, []);
+  const claimBonus = (origin: DOMRect | null, amount: number) => {
+    setDailyOpen(false);
+    const target = document.querySelector(".heart-control")?.getBoundingClientRect();
+    if (!origin || !target) { setBonusHearts((value) => value + amount); return; }
+    const x = origin.left + origin.width / 2; const y = origin.top + origin.height / 2;
+    setFlight({ id: Date.now(), x, y, dx: target.left + target.width / 2 - x, dy: target.top + target.height / 2 - y, amount });
+  };
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(seedMessages);
   const [kissHearts, setKissHearts] = useState(0);
@@ -163,8 +176,8 @@ function Index() {
         <img className="wood-surface" src={woodAsset} alt="" draggable={false} />
         <div className="table-content">
         <header className="table-toolbar">
-          {icon("Hearts", heartAsset, "heart-control")}
-          <span className="heart-value">{14 + kissHearts}</span>
+          {icon("Hearts", heartAsset, `heart-control${heartBump ? " heart-control-hit" : ""}`)}
+          <span key={heartBump} className={`heart-value${heartBump ? " heart-value-bump" : ""}`}>{14 + kissHearts + bonusHearts}</span>
           {icon("Trophy", trophyAsset, "trophy-control", true)}
            <GameMenu onRatings={() => { inputRef.current?.blur(); setRatingsOpen(true); }} onBoosters={() => { inputRef.current?.blur(); setBoostersOpen(true); }} onAchievements={() => setAchievementsOpen(true)} onAppearance={() => { inputRef.current?.blur(); setAppearanceOpen(true); }} onBottle={() => { inputRef.current?.blur(); setGiftRecipient(null); setBottleChooserOpen(true); }} />
           {icon("Settings", settingsAsset, "settings-control")}
@@ -173,7 +186,7 @@ function Index() {
           {icon("Players", countAsset, "count-control")}
         </header>
         <GameRoundStage players={tablePlayers} appearance={appliedAppearance} bottle={chosenBottle}
-          paused={opening || heartShopOpen || leagueOpen || settingsOpen || friendsOpen || contactOpen || boostersOpen || ratingsOpen || videoMusicOpen || profileOpen || appearanceOpen || achievementsOpen || bottleChooserOpen || Boolean(giftRecipient)}
+          paused={opening || dailyOpen || heartShopOpen || leagueOpen || settingsOpen || friendsOpen || contactOpen || boostersOpen || ratingsOpen || videoMusicOpen || profileOpen || appearanceOpen || achievementsOpen || bottleChooserOpen || Boolean(giftRecipient)}
           onPlayer={setGiftRecipient} onKisses={(count) => setKissHearts((previous) => previous + count)} />
         </div>
       </section>
@@ -200,6 +213,10 @@ function Index() {
       <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); closeBottles(); }} />
       <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} />
       <PlayerProfile open={profileOpen} recipient={giftRecipient} onOpenChange={setProfileOpen} onGifts={() => { if (!giftRecipient) setGiftRecipient(tablePlayers[0] ?? null); }} />
+      <DailyBonus open={dailyOpen} onClaim={claimBonus} />
+      {flight && <img key={flight.id} className="bonus-flying-heart" src={heartAsset} alt="" aria-hidden="true"
+        style={{ left: flight.x, top: flight.y, "--fly-x": `${flight.dx}px`, "--fly-y": `${flight.dy}px` } as React.CSSProperties}
+        onAnimationEnd={() => { setBonusHearts((value) => value + flight.amount); setHeartBump((value) => value + 1); setFlight(null); }} />}
       <HeartShop open={heartShopOpen} onOpenChange={setHeartShopOpen} />
       <AppearancePopup open={appearanceOpen} onOpenChange={setAppearanceOpen} applied={appliedAppearance} onApply={setAppliedAppearance} />
       <AchievementsPopup open={achievementsOpen} onOpenChange={setAchievementsOpen} progress={achievementProgress} />
