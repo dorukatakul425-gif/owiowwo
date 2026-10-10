@@ -7,3 +7,6 @@
 - [x] Test crown sending and arrival in the preview.
 - [x] Recheck progressive crown tilt and final seated angle against the recording's frames; direct viewing unavailable.
 - [x] Update rotation regression tests and verify sending through landing.
+- [x] Measure tomato flight, impact sound and avatar docking position from the supplied recording.
+- [x] Add tomato delivery with recorded audio and reference-relative geometry.
+- [x] Verify tomato sending, landing and both sounds in the preview.

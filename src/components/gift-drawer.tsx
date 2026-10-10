@@ -16,8 +16,8 @@ const giftLayoutStyles = `
 
 export type GiftRecipient = { name: string; image: string };
 
-export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onCrown }: {
-  recipient: GiftRecipient | null; onClose: () => void; onProfile: () => void; onHearts: () => void; onTea: (recipient: GiftRecipient) => void; onCrown: (recipient: GiftRecipient) => void;
+export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onCrown, onTomato }: {
+  recipient: GiftRecipient | null; onClose: () => void; onProfile: () => void; onHearts: () => void; onTea: (recipient: GiftRecipient) => void; onCrown: (recipient: GiftRecipient) => void; onTomato: (recipient: GiftRecipient) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   useEffect(() => {
@@ -39,8 +39,8 @@ export function GiftDrawer({ recipient, onClose, onProfile, onHearts, onTea, onC
       <div className="gift-drawer-scroll" key={recipient.name}>
         <div className="gift-reference-grid">
           {referenceGifts.map((gift, index) => <Button variant="reference" size="reference" className={`gift-reference-item${selected === gift.id ? " gift-selected" : ""}`} key={gift.id}
-            aria-label={gift.id === "gift-039" ? "Çay hədiyyəsi göndər" : gift.id === "gift-001" ? "Tac hədiyyəsi göndər" : gift.locked ? `Kilitli hediye ${index + 1}` : `Hediye ${index + 1}`} aria-disabled={gift.locked} aria-pressed={selected === gift.id}
-            onClick={() => { if (!gift.locked) { setSelected(gift.id); if (gift.id === "gift-039") onTea(recipient); if (gift.id === "gift-001") onCrown(recipient); } }}>
+            aria-label={gift.id === "gift-008" ? "Domates hediyesi gönder" : gift.id === "gift-039" ? "Çay hədiyyəsi göndər" : gift.id === "gift-001" ? "Tac hədiyyəsi göndər" : gift.locked ? `Kilitli hediye ${index + 1}` : `Hediye ${index + 1}`} aria-disabled={gift.locked} aria-pressed={selected === gift.id}
+            onClick={() => { if (!gift.locked) { setSelected(gift.id); if (gift.id === "gift-008") onTomato(recipient); if (gift.id === "gift-039") onTea(recipient); if (gift.id === "gift-001") onCrown(recipient); } }}>
             <img className="gift-reference-art" src={gift.image} alt="" draggable={false} loading={index > 19 ? "lazy" : "eager"} />
             <span className="gift-reference-price">{gift.locked ? <LockKeyhole aria-hidden="true" /> : <><img src={heartAsset.url} alt="kalp" />{gift.price}</>}</span>
           </Button>)}

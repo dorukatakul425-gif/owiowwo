@@ -27,6 +27,7 @@ import { GameRoundStage } from "@/components/game-round-stage";
 import { TeaGiftFlight, type TeaDelivery } from "@/components/tea-gift-flight";
 import { prepareTeaAudio, playTeaSound } from "@/lib/tea-audio";
 import { CrownGiftFlight, type CrownDelivery } from "@/components/crown-gift-flight";
+import { TomatoGiftFlight, type TomatoDelivery } from "@/components/tomato-gift-flight";
 import { prepareGiftAudio, playGiftSound } from "@/lib/gift-audio";
 import type { YouTubeTrack } from "@/lib/youtube.types";
 const woodAsset = "/game-assets/current/wood.png";
@@ -149,6 +150,7 @@ function Index() {
   const [giftRecipient, setGiftRecipient] = useState<GiftRecipient | null>(null);
   const [teaDeliveries, setTeaDeliveries] = useState<TeaDelivery[]>([]);
   const [crownDeliveries, setCrownDeliveries] = useState<CrownDelivery[]>([]);
+  const [tomatoDeliveries, setTomatoDeliveries] = useState<TomatoDelivery[]>([]);
   const crownSequence = useRef(0);
   const sendCrown = (recipient: GiftRecipient) => {
     const sender = tablePlayers[0];
@@ -157,6 +159,15 @@ function Index() {
     void playGiftSound("crown", "send");
     crownSequence.current += 1;
     setCrownDeliveries(previous => [...previous.filter(item => item.recipient !== recipient.name), { id: crownSequence.current, recipient: recipient.name, sender: sender.name }]);
+  };
+  const tomatoSequence = useRef(0);
+  const sendTomato = (recipient: GiftRecipient) => {
+    const sender = tablePlayers[0];
+    if (!sender) return;
+    prepareGiftAudio("tomato");
+    void playGiftSound("tomato", "send");
+    tomatoSequence.current += 1;
+    setTomatoDeliveries(previous => [...previous.filter(item => item.recipient !== recipient.name), { id: tomatoSequence.current, sender: sender.name, recipient: recipient.name }]);
   };
   const teaSequence = useRef(0);
   const sendTea = (recipient: GiftRecipient) => {
@@ -238,9 +249,10 @@ function Index() {
         <Button variant="reference" size="reference" className="send-control" type="submit" aria-label="Send message" onPointerDown={(event) => event.preventDefault()}><img src={sendAsset} alt="" /></Button>
       </form>
       <BottleChooser open={bottleChooserOpen} onClose={closeBottles} onSelect={(choice) => { setChosenBottle(choice); closeBottles(); }} />
-      <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} onTea={sendTea} onCrown={sendCrown} />
+      <GiftDrawer recipient={giftRecipient} onClose={closeGifts} onProfile={() => setProfileOpen(true)} onHearts={() => setHeartShopOpen(true)} onTea={sendTea} onCrown={sendCrown} onTomato={sendTomato} />
       {teaDeliveries.map(delivery => <TeaGiftFlight key={delivery.id} delivery={delivery} onComplete={() => setTeaDeliveries(previous => previous.filter(item => item.id !== delivery.id))} />)}
       {crownDeliveries.map(delivery => <CrownGiftFlight key={delivery.id} delivery={delivery} onComplete={() => setCrownDeliveries(previous => previous.filter(item => item.id !== delivery.id))} />)}
+      {tomatoDeliveries.map(delivery => <TomatoGiftFlight key={delivery.id} delivery={delivery} onComplete={() => setTomatoDeliveries(previous => previous.filter(item => item.id !== delivery.id))} />)}
       <PlayerProfile open={profileOpen} recipient={giftRecipient} onOpenChange={setProfileOpen} onGifts={() => { if (!giftRecipient) setGiftRecipient(tablePlayers[0] ?? null); }} />
       <DailyBonus open={dailyOpen} onClaim={claimBonus} />
       {flight && <img key={flight.id} className="bonus-flying-heart" src={heartAsset} alt="" aria-hidden="true"

@@ -3,7 +3,9 @@ import teaArrive from "@/assets/tea-arrive.wav.asset.json";
 import crownSend from "@/assets/crown-send.wav.asset.json";
 import crownArrive from "@/assets/crown-arrive.wav.asset.json";
 
-const recordings = { tea: { send: teaSend.url, arrive: teaArrive.url }, crown: { send: crownSend.url, arrive: crownArrive.url } };
+const tomatoSend = "/game-assets/current/tomato-send.wav";
+const tomatoArrive = "/game-assets/current/tomato-arrive.wav";
+const recordings = { tea: { send: teaSend.url, arrive: teaArrive.url }, crown: { send: crownSend.url, arrive: crownArrive.url }, tomato: { send: tomatoSend, arrive: tomatoArrive } };
 type Gift = keyof typeof recordings;
 type Sound = "send" | "arrive";
 let context: AudioContext | undefined;
