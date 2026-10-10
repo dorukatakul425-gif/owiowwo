@@ -1,6 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import claimSound from "@/assets/daily-bonus-claim.m4a.asset.json";
 
 export const dailyBonusDay = 3;
 const days = [1, 2, 3, 4, 5];
@@ -16,23 +17,9 @@ function HeartBadge({ value }: { value: number }) {
 
 export function playBonusSound() {
   if (typeof window === "undefined") return;
-  const AudioCtor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!AudioCtor) return;
-  const audio = new AudioCtor();
-  const start = audio.currentTime;
-  [[880, 0], [1320, 0.1], [1760, 0.2]].forEach(([frequency, offset]) => {
-    const oscillator = audio.createOscillator();
-    const gain = audio.createGain();
-    oscillator.type = "triangle";
-    oscillator.frequency.setValueAtTime(frequency, start + offset);
-    gain.gain.setValueAtTime(0.0001, start + offset);
-    gain.gain.exponentialRampToValueAtTime(0.32, start + offset + 0.012);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + offset + 0.18);
-    oscillator.connect(gain).connect(audio.destination);
-    oscillator.start(start + offset);
-    oscillator.stop(start + offset + 0.2);
-  });
-  window.setTimeout(() => void audio.close(), 800);
+  const sound = new Audio(claimSound.url);
+  sound.volume = 1;
+  void sound.play().catch(() => undefined);
 }
 
 export function DailyBonus({ open, onClaim }: { open: boolean; onClaim: (origin: DOMRect | null, amount: number) => void }) {

@@ -96,10 +96,13 @@ function Index() {
   const [flight, setFlight] = useState<{ id: number; x: number; y: number; dx: number; dy: number; amount: number } | null>(null);
   const [heartBump, setHeartBump] = useState(0);
   const finishOpening = useCallback(() => { setOpening(false); setDailyOpen(true); }, []);
-  const claimBonus = (origin: DOMRect | null, amount: number) => {
+  const claimBonus = (claimOrigin: DOMRect | null, amount: number) => {
     setDailyOpen(false);
+    let origin = claimOrigin;
     const target = document.querySelector(".heart-control")?.getBoundingClientRect();
-    if (!origin || !target) { setBonusHearts((value) => value + amount); return; }
+    const bottleRect = document.querySelector(".round-bottle")?.getBoundingClientRect();
+    if (bottleRect && bottleRect.width) origin = new DOMRect(bottleRect.left + bottleRect.width * 0.3, bottleRect.top + bottleRect.height * 0.05, 0, 0);
+    if (!claimOrigin || !origin || !target) { setBonusHearts((value) => value + amount); return; }
     const x = origin.left + origin.width / 2; const y = origin.top + origin.height / 2;
     setFlight({ id: Date.now(), x, y, dx: target.left + target.width / 2 - x, dy: target.top + target.height / 2 - y, amount });
   };

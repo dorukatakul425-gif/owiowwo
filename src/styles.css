@@ -933,8 +933,8 @@ body { position: fixed; inset: 0; width: 100%; }
 .daily-heart b { position: relative; color: var(--daily-white); font-size: 4cqw; }
 .daily-claim.reference-button { display: flex; margin: 6cqw auto 0; width: 27cqw; height: 10cqw; border-radius: 2cqw; background: var(--daily-green-deep); color: var(--daily-white); font-size: 4.8cqw; font-weight: 400; }
 .daily-claim.reference-button:active { transform: scale(0.96); }
-.bonus-flying-heart { position: fixed; z-index: 60; width: 18px; height: 18px; margin: -9px 0 0 -9px; pointer-events: none; animation: bonus-heart-fly 1100ms cubic-bezier(0.45, 0, 0.55, 1) forwards; }
-@keyframes bonus-heart-fly { 0% { transform: translate(0, 0) scale(0.7); opacity: 0; } 8% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { transform: translate(var(--fly-x), var(--fly-y)) scale(1.1); opacity: 1; } }
+.bonus-flying-heart { position: fixed; z-index: 60; width: 3.1vw; max-width: 14px; aspect-ratio: 1; height: auto; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; animation: bonus-heart-fly 1100ms linear 150ms forwards; }
+@keyframes bonus-heart-fly { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } 6% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 92% { opacity: 1; transform: translate(calc(-50% + var(--fly-x) * 0.97), calc(-50% + var(--fly-y) * 0.97)) scale(1); } 100% { opacity: 0; transform: translate(calc(-50% + var(--fly-x)), calc(-50% + var(--fly-y))) scale(0.4); } }
 .heart-control-hit { animation: bonus-heart-hit 380ms ease-out; }
 @keyframes bonus-heart-hit { 0%, 100% { scale: 1; } 40% { scale: 1.28; } }
 .heart-value-bump { animation: bonus-value-bump 420ms ease-out; display: inline-block; }
